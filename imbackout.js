@@ -1218,6 +1218,30 @@ document.addEventListener('keydown', function (event) {
       store4points(fourpx, fourpy);
 
       changeLabelCol();
+    } else if (37 == keycode) { // Keys.Left
+      fourpx[0]--;
+      paint0Image(g_img, g_drawGrid);
+    } else if (39 == keycode) { // Keys.Right
+      fourpx[0]++;
+      paint0Image(g_img, g_drawGrid);
+    } else if (113 == keycode) { // Keys.Right  
+      fourpx[1]--;
+      paint0Image(g_img, g_drawGrid);      
+    } else if (115 == keycode) { // Keys.Right        
+      fourpx[1]++;
+      paint0Image(g_img, g_drawGrid);   
+    } else if (38 == keycode) { // Keys.Up
+      fourpy[0]--;
+      paint0Image(g_img, g_drawGrid);
+    } else if (40 == keycode) { // Keys.Dn
+      fourpy[0]++;
+      paint0Image(g_img, g_drawGrid);
+    } else if (119 == keycode) { // Keys.Dn
+      fourpy[1]--;
+      paint0Image(g_img, g_drawGrid);
+    } else if (120 == keycode) { // Keys.Dn
+      fourpy[1]++;
+      paint0Image(g_img, g_drawGrid);
     }
   }
 });
