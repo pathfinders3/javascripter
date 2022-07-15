@@ -11,6 +11,8 @@ let g_stores = [];
 let selcol1 = document.getElementById('colsel');
 let browsers1 = document.getElementById('browsers');
 
+let rect_cx = document.getElementById('rect_cx');	// show the clicked rectangle size
+let rect_cy = document.getElementById('rect_cy');
 let fourpx = [-1, -1];
 let fourpy = [-1, -1];
 //let fourpy = [-1, -1, -1, -1];
@@ -1055,6 +1057,9 @@ g_layer1.addEventListener('mousedown', function (ev) {
   cl("four px, and py checking:");
   cl(fourpy);
   cl(fourpx);
+
+  rect_cx.value = fourpx[1] - fourpx[0];
+  rect_cy.value = fourpy[1] - fourpy[0];
   
   paint0Image(g_img, true); // to draw Measure.
 
@@ -1169,9 +1174,7 @@ document.addEventListener('keydown', function (event) {
       
     } else if (68 == keycode) { //'D' ; Cut the Manual Region
       console.log(cutMode);
-      //let ww = fourpx[1] - fourpx[0];
-      //let hh = fourpy[3] - fourpy[2];
-      //cropImage(g_img, fourpx[0], fourpy[2], fourpx[1], fourpy[3]); // 10x20
+
       cropImage(g_img, fourpx[0], fourpy[0], fourpx[1], fourpy[1]); // 10x20
       
       g_layer1.width = g_img.width;
