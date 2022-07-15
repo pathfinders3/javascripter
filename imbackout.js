@@ -11,9 +11,9 @@ let g_stores = [];
 let selcol1 = document.getElementById('colsel');
 let browsers1 = document.getElementById('browsers');
 
-let fourpx = [-1, -1, -1, -1];
-let fourpy = [-1, -1, -1, -1];
-let fouridx = -1;
+let fourpx = [-1, -1];
+let fourpy = [-1, -1];
+//let fourpy = [-1, -1, -1, -1];
 
 let pxArr = [];
 let pyArr = [];
@@ -42,11 +42,12 @@ function storeGuideAsCookie() {	// (cx,cy)
   setCookie('px1', fourpx[1], 7);
   setCookie('py1', fourpy[1], 7);
 
+  /*
   setCookie('px2', fourpx[2], 7);
   setCookie('py2', fourpy[2], 7);  
 
   setCookie('px3', fourpx[3], 7);
-  setCookie('py3', fourpy[3], 7);
+  setCookie('py3', fourpy[3], 7);*/
 }
 
 function getGuideFromCookie() {
@@ -56,18 +57,15 @@ function getGuideFromCookie() {
   fourpx[1] = getCookie('px1');
   fourpy[1] = getCookie('py1');
 
+  /*
   fourpx[2] = getCookie('px2');
   fourpy[2] = getCookie('py2');
 
   fourpx[3] = getCookie('px3');
-  fourpy[3] = getCookie('py3');  
+  fourpy[3] = getCookie('py3');  */
 
   console.log(fourpx, fourpy, " was loaded");  
-  /*pxArr[0] = getCookie('px1');
-    
-  fouridx = ix4;  
-  console.log(pxArr[0], pyArr[0], " was loaded");
-  */
+
 }
 
 // setCookie('myHobby', 'game', '3');
@@ -111,8 +109,10 @@ function changeLabelCol() {
 
 // fourpx, fourpy
 function store4points(fpx, fpy) {
-  let tmp1 = [fpx[0], fpx[1], fpx[2], fpx[3]];
-  let tmp2 = [fpy[0], fpy[1], fpy[2], fpy[3]];
+  //let tmp1 = [fpx[0], fpx[1], fpx[2], fpx[3]];
+  //let tmp2 = [fpy[0], fpy[1], fpy[2], fpy[3]];
+  let tmp1 = [fpx[0], fpx[1]];
+  let tmp2 = [fpy[0], fpy[1]];
 
   pxArr.push(tmp1);
   pyArr.push(tmp2);
@@ -122,12 +122,13 @@ function store4points(fpx, fpy) {
     pyArr.splice(0, 1);
   }
 
+  //cl('You got great?');
   console.log(pxArr);
   console.log(pyArr);
 }
 // pull 4 points edges to use for cutting.
 function pull4points(nn) {
-  fourpx = pxArr[nn];
+  fourpx = pxArr[nn]; // e.g. pxArr[nn] == [x1, y1]
   fourpy = pyArr[nn];
 }
 
@@ -205,11 +206,7 @@ function restoreImage() {
   g_layer1.height = g_dataIMG.height;
   drawDataURIOnCanvas(g_dataIMG.src, g_layer1);
 }
-/*
-function storeImage() {
-  g_dataIMG.src = g_layer1.toDataURL();
-}
-*/
+
 
 //
 //
@@ -225,7 +222,8 @@ function copyImage() {
 function paint0Image(img1, drawGrid) {
   // draw on global context.
   g_context.drawImage(img1, 0, 0, img1.width, img1.height);
-  
+  cl(img1.width, img1.height, 'is that coord 229');
+
   if (drawGrid)
     drawMeasure();
 }
@@ -239,17 +237,18 @@ function drawMeasure() {
 
   g_context.beginPath();
   //context.rect(fourpx[0], fourpy[0], fourpx[1] - fourpx[0], fourpy[1] - fourpy[0]);
+  // 가로를 알려주는 세로선
   g_context.moveTo(fourpx[0], 0);
   g_context.lineTo(fourpx[0], g_img.height);
-
+  // 가로를 알려주는 세로선
   g_context.moveTo(fourpx[1], 0);
   g_context.lineTo(fourpx[1], g_img.height);  
 
-  //g_context.moveTo(0, fourpy[2]);
+  // horizontal line for Y1
   g_context.moveTo(0, fourpy[0]);
   g_context.lineTo(g_img.width, fourpy[0]);
 
-  //g_context.moveTo(0, fourpy[3]);
+  // horizontal line for Y2
   g_context.moveTo(0, fourpy[1]);
   g_context.lineTo(g_img.width, fourpy[1]);
 
@@ -1044,18 +1043,23 @@ g_layer1.addEventListener('mousedown', function (ev) {
   let ix4 = getFourIndex(x1, y1, img.width, img.height);
   fourpx[ix4] = x1;
   fourpy[ix4] = y1;*/
+
+  // 클릭된 값을 넣는다
   let ix4 = -1;
   if (cutMode == 'cut2lr') {
     ix4 = getLRIndex(x1, g_img.width);
+    fourpx[ix4] = x1;
   } else {
     ix4 = getTBIndex(y1, g_img.height);
     cl(/ix4 is for y now/, ix4);
+    fourpy[ix4] = y1;  
   }
   // four t,b, l,r pixels for bars.
-  fourpx[ix4] = x1;
-  fourpy[ix4] = y1;  
-  fouridx = ix4;
 
+  cl("four px, and py checking:");
+  cl(fourpy);
+  cl(fourpx);
+  
   paint0Image(g_img, true); // to draw Measure.
 
   // SELECTED COLOR PRINT (from global_context) 
@@ -1163,7 +1167,7 @@ document.addEventListener('keydown', function (event) {
       g_layer1.height = g_img.height;
       console.log('ALT2 Result x1x2 y1y2',x1, x2, y1, y2);
     }
-  } else {
+  } else {  // if NOT ALT.
     if (82 == keycode) { //'R'
       cutMode = (cutMode == 'cut2lr' ? cutMode = 'cut2tb' : cutMode = 'cut2lr');
       
@@ -1171,7 +1175,7 @@ document.addEventListener('keydown', function (event) {
       console.log(cutMode);
       //let ww = fourpx[1] - fourpx[0];
       //let hh = fourpy[3] - fourpy[2];
-      cropImage(g_img, fourpx[0], fourpy[2], fourpx[1], fourpy[3]); // 10x20
+      //cropImage(g_img, fourpx[0], fourpy[2], fourpx[1], fourpy[3]); // 10x20
       g_layer1.width = g_img.width;
       g_layer1.height = g_img.height;
       g_drawGrid = false;
@@ -1180,7 +1184,6 @@ document.addEventListener('keydown', function (event) {
       cutMode = 'none';
       store4points(fourpx, fourpy);
       changeLabelCol();
-
     } else if (69 == keycode) { //'E'
       cutMode = 'cutlr';
       console.log(cutMode);
