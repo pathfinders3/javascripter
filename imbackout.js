@@ -1172,6 +1172,8 @@ document.addEventListener('keydown', function (event) {
       //let ww = fourpx[1] - fourpx[0];
       //let hh = fourpy[3] - fourpy[2];
       //cropImage(g_img, fourpx[0], fourpy[2], fourpx[1], fourpy[3]); // 10x20
+      cropImage(g_img, fourpx[0], fourpy[0], fourpx[1], fourpy[1]); // 10x20
+      
       g_layer1.width = g_img.width;
       g_layer1.height = g_img.height;
       g_drawGrid = false;
