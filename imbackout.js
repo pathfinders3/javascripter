@@ -43,9 +43,7 @@ function storeGuideAsCookie() {	// (cx,cy)
   setCookie('py1', fourpy[1], 7);
 
   /*
-  setCookie('px2', fourpx[2], 7);
-  setCookie('py2', fourpy[2], 7);  
-
+	coommit 커밋토?
   setCookie('px3', fourpx[3], 7);
   setCookie('py3', fourpy[3], 7);*/
 }
@@ -58,11 +56,9 @@ function getGuideFromCookie() {
   fourpy[1] = getCookie('py1');
 
   /*
-  fourpx[2] = getCookie('px2');
-  fourpy[2] = getCookie('py2');
 
-  fourpx[3] = getCookie('px3');
-  fourpy[3] = getCookie('py3');  */
+  fourpx[3x] = getCookie('px3');
+  fourpy[3x] = getCookie('py3');  */
 
   console.log(fourpx, fourpy, " was loaded");  
 
@@ -1215,6 +1211,7 @@ document.addEventListener('keydown', function (event) {
       console.log(fourpx, "fourpx");
       console.log(fourpy, "fourpy");
       store4points(fourpx, fourpy);
+
       changeLabelCol();
     }
   }
