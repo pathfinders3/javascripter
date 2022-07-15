@@ -1215,7 +1215,6 @@ document.addEventListener('keydown', function (event) {
       console.log(fourpx, "fourpx");
       console.log(fourpy, "fourpy");
       store4points(fourpx, fourpy);
-
       changeLabelCol();
     }
   }
