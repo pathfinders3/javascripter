@@ -1184,6 +1184,7 @@ g_layer1.addEventListener('mousedown', function (ev) {
 
     // from calcSlope()... to independent func.(later)
     // xgo,ygo는 기울기 구하기용 (xgo는 현재 양방향 GO임. 나누어야 단방향 GO)
+    /*
     let xgo = (lowerLine[1] - lowerLine[0]) - (upperLine[1] - upperLine[0]);
     let ygo = (lowerLine[3] - upperLine[3]);
     //m=(ygo / xgo), x = y/m.
@@ -1193,7 +1194,9 @@ g_layer1.addEventListener('mousedown', function (ev) {
     cl(/clicked X is base :/, clickedX, mm, rela_x);
     cl(/전픽셀가로/, lowerLine[1] - lowerLine[0]);
     cl(/CUR픽셀의 Y내려옴/, middleLine[3] - upperLine[3]);
+    */
 
+    /*
     let mmdiv = mm/2; // 기본 기울기보다 2배 가파르게 내려가야 우측 사다리꼴 기울기도 맞춘다
     let xgo2 = getXgo(mmdiv, ym_go);
     //cl('CUR픽셀의 Xmin(X좌 시작점)', upperLine[0] - middleLine[0]);
@@ -1202,8 +1205,9 @@ g_layer1.addEventListener('mousedown', function (ev) {
 
     // mm은 좌우 전체의 기울기로 낮은 기울기이므로, 각도 높은 편도 기울기로 바꾸어준다(2로나눔)
     cl(/CUR픽셀의 Xmin + 이동(X좌로부터의 거리)/, (upperLine[0] - mm * ym_go) + (middleLine[0] - (upperLine[0] - mm * ym_go)));
+  */
 
-
+    /*
     let ym_go2 = parrLine[3] - upperLine[3];  // 병행 라인이 얼마나 밑으로 갔는지.
     // 1; 전 픽셀 가로 길이
     // 2; Cur(Given) 픽셀 Xmin(X좌 시작점)
@@ -1223,7 +1227,7 @@ g_layer1.addEventListener('mousedown', function (ev) {
     cl("ym_go? how much");
     cl(ym_go);
     //cl(getRatio(arg1, 10, middleLine[1] - middleLine[0]));
-
+*/
   }
   // four t,b, l,r pixels for bars.
 
