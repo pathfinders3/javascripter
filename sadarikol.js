@@ -22,7 +22,7 @@ let middleLine = [-1, -1];
 let clickedX = -1;
 let clickedY = -1;
 
-let parrLine = [-1, -1];
+let paral_a = [-1, -1];
 
 let pxArr = [];
 let pyArr = [];
@@ -43,45 +43,8 @@ let g_toll = 20;
 
 const cl = console.log.bind(console);
 
-// xmgo : how much x progress (X middle go, clicked X pos)
-/**
- * let ygo = getYgo(-1.5, 2); // -3 expected.
-console.log(ygo); // yLower로부터 -3 이라고 보아야...
- * @param {*} mm 
- * @param {*} xmgo 
- * @returns 
- */
-function getYgo(mm, xmgo) {
-  let yy = mm*xmgo;
 
-  return yy;
-}
 
-// getXgo will be main function.
-// ymgo : how much down (Y middle go, clicked Y pos)
-/**
- * console.log('클릭에 대한 X값:');
-let xgo = getXgo(-1.5, 3); // -2 expected.
-console.log(xgo); // xUpper로부터 -2 라는 것.
- * @param {*} mm 
- * @param {*} ymgo 
- * @returns 
- */
-function getXgo(mm, ymgo) {
-  let hh = ymgo/mm;
-  
-  return hh;
-}
-
-/**
- * let mm1 = getMM(5, -5);
- * let mm = getMM(1.1, 1.6); * 
- */
-function getMM(xmgo, ymgo) {
-  let mm = ymgo/xmgo;
-
-  return mm;
-}
 
 
 
@@ -313,7 +276,7 @@ function copyImage() {
 function paint0Image(img1, drawGrid) {
   // draw on global context.
   g_context.drawImage(img1, 0, 0, img1.width, img1.height);
-  cl(img1.width, img1.height, 'is that coord 229');
+  //cl(img1.width, img1.height, ' 가 이미지 사이즈[316] ');
 
   if (drawGrid) {
     drawMeasure();
@@ -351,7 +314,8 @@ function drawMeasure() {
 
   let xsize = fourpx[1] - fourpx[0];
   let ysize = fourpy[1] - fourpy[0];
-  console.log("xsize;%d fpx01 ysize;%d fpy01", xsize, ysize);
+  //console.log("xsize;%d fpx01 ysize;%d fpy01", xsize, ysize);
+  cl('녹색가드 좌표 : x1', fourpx[0], 'x2', fourpx[1], 'xsize', xsize, 'y1', fourpy[0]);
 }
 
 /*
@@ -386,48 +350,16 @@ function drawTripe() {
 
   g_context.stroke();
 
-  // 추가된 부분 (굵게 선 긋기 위한...)
-  /*
-  g_context.strokeStyle = 'rgb(50,112,210)';
-
-  g_context.beginPath();
-
-  g_context.moveTo(upperLine[0]+1, upperLine[2]);
-  g_context.lineTo(lowerLine[0]+1, lowerLine[2]);  
-  g_context.moveTo(upperLine[1]+1, upperLine[2]);
-  g_context.lineTo(lowerLine[1]+1, lowerLine[2]);
-
-  g_context.strokeStyle = 'rgb(150,212,110)';
-  g_context.lineWidth = 2;
-
-  g_context.moveTo(upperLine[0] + 2, upperLine[2]);
-  g_context.lineTo(lowerLine[0] + 2, lowerLine[2]);
-  g_context.moveTo(upperLine[1] + 2, upperLine[2]);
-  g_context.lineTo(lowerLine[1] + 2, lowerLine[2]);  
-
-  g_context.stroke();*/
 
   // 추가된 부분 (클릭된 점 표시용)
 
   g_context.beginPath();
   g_context.strokeRect(middleLine[0], middleLine[2], 4, 4);
-  g_context.strokeRect(parrLine[0], parrLine[2], 4, 4);  
 
+  
+  g_context.strokeRect(paral_a[0], paral_a[1], 4, 4);  
 }
 
-// xup_cx, xup_n, mid_cx, mid_n
-/**
- * using with parr line.
- * @param {*} xup_cx 
- * @param {*} xup_n 
- * @param {*} mid_cx 
- * @returns 
- */
-function getRatio(xup_cx, xup_n, mid_cx) {
-  let ret = xup_n * mid_cx / xup_cx;
-
-  return ret;
-}
 
 
 /**
@@ -463,171 +395,6 @@ function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
       callback(blob);
     }
   }
-}
-
-
-
-
-
-// go from center to left.
-function chkGoLeftBG(imgd, bg, toll20) {
-  let pix = makeImageDataFrom(imgd).data;
-  //let ret2 = imgd.height - 1;
-  // vertical first.
-  let cnt = 0;
-  let cnt2 = 0; // black
-  let xbegin = [];
-
-  for (let j = 0; j < imgd.height; j++) {
-    let x1 = getIndex(0, j, imgd);
-    let x2 = getIndex( ~~(imgd.width/3), j, imgd);
-
-    for (let i = x2 - 4; i >= x1; i -= 4) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        cnt++;
-        if (cnt == toll20 && cnt2 > (toll20>>1)) { // enough black, and cosecutive whites.
-          let xstart = getXFromIndex(i, imgd);
-          //console.log(j,"xstart(+10):", xstart, xbegin); // -1:margin.
-          xbegin.push(xstart); // this can be:xstart-padding.
-          break;  // because already found in current row(i).
-        } 
-        //continue; not needed, automatically continue.
-      } else {
-        cnt = 0;
-        cnt2++;
-      }
-    };  // i
-  }   // j
-
-  console.log('X1 Min 184: ', Math.min(...xbegin));
-  if (xbegin.length == 0)
-    return 0;
-  return Math.min(...xbegin);
-}
-
-// go from center to left.
-function chkGoRightBG(imgd, bg, toll20) {
-  let pix = makeImageDataFrom(imgd).data;
-  // vertical first.
-  let cnt = 0;
-  let cnt2 = 0; // black
-  let xbegin = [];
-
-  for (let j = 0; j < imgd.height; j++) {
-    let xr1 = getIndex(~~(imgd.width/3*2), j, imgd);
-    let xr2 = getIndex(imgd.width-1, j, imgd);
-
-    for (let i = xr1; i <= xr2; i += 4) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        cnt++;
-        if (cnt == toll20 && cnt2 > (toll20 >> 1)) { // enough black, and cosecutive whites.        
-          let xstart = getXFromIndex(i, imgd);
-          //console.log(j,"xstart(+10):", xstart, xbegin); // -1:margin.
-          xbegin.push(xstart); // this can be:xstart-padding.
-          break;  // because already found in current row(i).
-        }
-        continue;
-      } else {
-        cnt = 0;
-        cnt2++;
-      }
-    };  // i
-  }   // j
-
-  //console.log(Math.min(...xbegin));
-  if (xbegin.length == 0)
-    return imgd.width-1;
-  return Math.max(...xbegin);
-}
-
-// go from center to left.
-function chkGoDownBG(imgd, bg, toll20) {
-  let pix = makeImageDataFrom(imgd).data;
-  // vertical first.
-  let cnt = 0;
-  let cnt2 = 0; // black
-  let ybegin = [];
-  let row1 = 4 * imgd.width;
-
-  for (let j = 0; j < imgd.width; j++) {
-    let y1 = getIndex(j, ~~(imgd.height/3*2), imgd);
-    let y2 = getIndex(j, imgd.height - 1, imgd); // max-bottom    
-    for (let i = y1; i <= y2; i += row1) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        cnt++;
-        if (cnt == toll20 && cnt2 > (toll20 >> 1)) { // enough black, and cosecutive whites.        
-          let ystart = getYFromIndex(i, imgd);
-          //console.log(j,"xstart(+10):", xstart, xbegin); // -1:margin.
-          ybegin.push(ystart); // this can be:xstart-padding.
-          break;  // because already found in current row(i).
-        }
-        continue;
-      } else {
-        cnt = 0;
-        cnt2++;
-      }
-    };  // i
-  }   // j
-
-  //console.log(Math.min(...xbegin));
-  if (ybegin.length == 0)
-    return imgd.height - 1;
-  return Math.max(...ybegin);
-}
-
-// go from center to left.
-function chkGoUpBG(imgd, bg, toll20) {
-  let pix = makeImageDataFrom(imgd).data;
-  // vertical first.
-  let cnt = 0;
-  let cnt2 = 0; // black
-  let ybegin = [];
-  let row1 = 4 * imgd.width;
-
-  for (let j = 0; j < imgd.width; j++) {
-    let y1 = getIndex(j, 0, imgd);
-    let y2 = getIndex(j, ~~(imgd.height/3), imgd); // max-bottom    
-    for (let i = y2; i >= y1; i -= row1) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        cnt++;
-        if (cnt == toll20 && cnt2 > (toll20 >> 1)) { // enough black, and cosecutive whites.        
-          let ystart = getYFromIndex(i, imgd);
-          //console.log(j,"xstart(+10):", xstart, xbegin); // -1:margin.
-          ybegin.push(ystart); // this can be:xstart-padding.
-          break;  // because already found in current row(i).
-        }
-        continue;
-      } else {
-        cnt = 0;
-        cnt2++;
-      }
-    };  // i
-  }   // j
-
-  //console.log(Math.min(...xbegin));
-  if (ybegin.length == 0)
-    return imgd.height - 1;
-  return Math.min(...ybegin);
 }
 
 
@@ -1098,6 +865,163 @@ function getRandomInt(min, max) {
 }
 
 
+
+// 한쪽 면만 고려한 Min Max.
+// let xxx = getXMinLeftSide(6,5, 5,8, 7);
+//let xxx = getXMinLeftSide(6, 5, 5,8, 8.0); =>expect ret=5.
+//let xxx = getXMinLeftSide(6, 5, 5,8, 7.0); => exp 5.32;
+//let xxx = getXMinLeftSide(6, 5, 5,8, 6.0); => exp 5.68;
+function getXMinLeftSide(x1up, x1dn, y1,y2, yclick) {
+  //let xlong_left = x1up - x1dn; //1
+  let xlong_left = x1dn - x1up; //1
+  let ylong_whole = y2 - y1;
+
+  let mm = (ylong_whole / xlong_left);
+
+  console.log(mm, "is mm");
+
+  // y눌린좌표 실 적용 y=mx 에서 x값 유도
+  // x= y/m
+  // x= y/m + 시작점.
+  let xstart = x1up + ((yclick - y1) / (mm));
+  
+  // for debug.
+  //dbg1 = [xstart, yclick, y1, mm];
+  //console.log(dbg1);
+
+  return xstart;  
+}
+
+function getXMaxRightSide(x2up, x2dn, y1, y2, yclick) {
+  let xlong_right = x2dn - x2up; //1
+  let ylong_whole = y2 - y1;
+  let mm = (ylong_whole / xlong_right);
+
+  let xend = x2up + ((yclick - y1) / (mm));
+
+  return xend;
+}
+
+
+// different version of getRatio()
+// calcAvg(200,300,210) return : 10%
+function calcAvg(x1, x2, xc) {
+  let xrange = x2 -x1;
+  let xpos = xc - x1;
+  let avg = xpos/xrange*100;
+
+  return avg;
+}
+
+
+// xup_cx, xup_n, mid_cx, mid_n
+/**
+ * using with parr line.
+ * @param {*} xup_cx 
+ * @param {*} xup_n 
+ * @param {*} mid_cx 
+ * @returns 
+ */
+function getRatio(xup_cx, xup_n, mid_cx) {
+  let ret = xup_n * mid_cx / xup_cx;
+
+  return ret;
+}
+
+
+// get left TILT
+function getm1() {
+  let ygo = (lowerLine[3] - upperLine[3]);
+  let m1 = ygo / (upperLine[0] - lowerLine[0]);
+
+  return m1;
+}
+
+// get left TILT
+function getm2() {
+  let ygo = (lowerLine[3] - upperLine[3]);
+  let m2 = ygo / (lowerLine[1] - upperLine[1]);
+
+  return m2;
+}
+
+function calcRatioStep2(clickY1) {
+  ///* // 매우 잘 잡힘. (Xmin ~ XMax 2개 값)
+    let ret_left = getXMinLeftSide(upperLine[0], lowerLine[0], upperLine[2], lowerLine[2], clickY1);
+    cl("ret_left[좌시작점], upperLine", ret_left, upperLine);	// 좌측시작점
+    let ret_right = getXMaxRightSide(upperLine[1], lowerLine[1], upperLine[2], lowerLine[2], clickY1);
+    cl("ret_right[우끝점]", ret_right);	// 좌측시작점
+  //*/
+  
+  //upperLine = [fourpx[0], fourpx[1], clickedY, clickedY];
+
+  let clickedY2 = (clickY1 - upperLine[2]);
+
+  let m1 = getm1();
+  let m2 = getm2();
+
+  // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
+  let xmin = upperLine[0] - (clickedY2 / m1);
+  let xmax = upperLine[1] + (clickedY2 / m2);
+
+  let xtotal = (xmax - xmin);
+  let x_percent = (clickedX - xmin) / xtotal * 100;
+  //cl("[calc] X-Percent:", x_percent);
+
+  // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
+  let perc = calcAvg(ret_left, ret_right, (clickedY2/m1));
+  //return [xmin, x_percent, xmax, ret_left, -1, ret_right];
+  return [ret_left, perc, ret_right];
+}
+
+let ret1;
+
+/**
+ * calculate X step regarding Ratio.
+ * / .... 30% xgo ...... /
+ */
+function calcRatioStep(clickY1) {
+  ret1 = calcRatioStep2(clickY1);
+
+
+  /* // 매우 잘 잡힘. (Xmin ~ XMax 2개 값)
+    let ret_left = getXMinLeftSide(upperLine[0], lowerLine[0], upperLine[2], lowerLine[2], clickY1);
+    cl("ret_left[좌시작점], upperLine", ret_left, upperLine);	// 좌측시작점
+    let ret_right = getXMaxRightSide(upperLine[1], lowerLine[1], upperLine[2], lowerLine[2], clickY1);
+    cl("ret_right[우끝점]", ret_right);	// 좌측시작점
+  //*/
+
+  /*
+  let clickedY2 = (clickY1 - upperLine[2]);
+  let ygo = (lowerLine[3] - upperLine[3]);
+  let m1 = ygo / (upperLine[0] - lowerLine[0]);
+  let m2 = ygo / (lowerLine[1] - upperLine[1]);
+  // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
+  let xmin = upperLine[0] - (clickedY2 / m1);
+  let xmax = upperLine[1] + (clickedY2 / m2);
+
+  let xtotal = (xmax - xmin);
+  let x_percent = (clickedX - xmin) / xtotal * 100;
+  //cl("[calc] X-Percent:", x_percent);
+
+  // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
+  return [xmin, x_percent, xmax];
+  */
+
+  return ret1;
+}
+
+// percentage에 대한 실제 X좌표 리턴.
+/**
+ * getXCoord(25, 100)
+25
+ */
+function getXCoord(x_percent, xtotal) {
+  let ret = (x_percent/100) * xtotal;
+
+  return ret;
+}
+
 window.addEventListener("paste", function (e) {
   // Handle the event
   retrieveImageFromClipboardAsBlob(e, function (imageBlob) {
@@ -1160,80 +1084,32 @@ g_layer1.addEventListener('mousedown', function (ev) {
     clickedX = x1;
     clickedY = y1; 
     
-    cl(/ix4 is for y now/, clickedY);
+    //cl(/ix4 is for y now/, clickedY);// 조건문 들어오는 것 체크용
     // 미들라인은 모든 클릭 라인(Y 좌표 지정용 클릭 시 매번 ASSIGN)
     middleLine = [clickedX, clickedX */fourpx[1]*/, clickedY, clickedY];
 
+    // X Coord Show, by step regarding x ratio.
+    // xper1 = calcRatioStep(clickedY);
+    xper2 = calcRatioStep(clickedY)[1];	// 함수내서 2번함수 테스트중.
+	//let xper3 = calcRatioStep2(clickedY)[1];
+	
 
-    {
-      let clickedY2 = (clickedY - upperLine[2]);
-      let ygo = (lowerLine[3] - upperLine[3]);
-      let m1 = ygo / (upperLine[0] - lowerLine[0]);
-      let m2 = ygo / (lowerLine[1] - upperLine[1]);
-      // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
-      let xmin = upperLine[0] - (clickedY2 / m1);
-      let xmax = upperLine[1] + (clickedY2 / m2);
+    // 리턴을 퍼센테이지로 하므로 어긋난다 (5,10,15아래 위치가...)
+    let xmin = calcRatioStep(clickedY + 15)[0];
+    let xmax = calcRatioStep(clickedY + 15)[2];
 
-      /*cl(upperLine[1]);
-      cl(clickedY2);
-      cl(m2);*/
-      cl("YAHO XMIN and XMAX are:");
-      cl(xmin);
-      cl(xmax);
-    }
+    let xcoord = getXCoord(xper2, xmax - xmin);
 
-    // from calcSlope()... to independent func.(later)
-    // xgo,ygo는 기울기 구하기용 (xgo는 현재 양방향 GO임. 나누어야 단방향 GO)
-    /*
-    let xgo = (lowerLine[1] - lowerLine[0]) - (upperLine[1] - upperLine[0]);
-    let ygo = (lowerLine[3] - upperLine[3]);
-    //m=(ygo / xgo), x = y/m.
-    let mm = ygo / xgo;
-    let ym_go = middleLine[3] - upperLine[3];
-    let rela_x = ym_go / mm;
-    cl(/clicked X is base :/, clickedX, mm, rela_x);
-    cl(/전픽셀가로/, lowerLine[1] - lowerLine[0]);
-    cl(/CUR픽셀의 Y내려옴/, middleLine[3] - upperLine[3]);
-    */
+    paral_a = [xmin + xcoord, clickedY + 15];
+    //paral_a = [xmin + xcoord, clickedY];
 
-    /*
-    let mmdiv = mm/2; // 기본 기울기보다 2배 가파르게 내려가야 우측 사다리꼴 기울기도 맞춘다
-    let xgo2 = getXgo(mmdiv, ym_go);
-    //cl('CUR픽셀의 Xmin(X좌 시작점)', upperLine[0] - middleLine[0]);
-    cl('CUR픽셀의 Xmin(X좌 시작점)', upperLine[0] - middleLine[0]);
-    cl('CUR픽셀의 Xmin(X좌 시작점) xgo2:', xgo2);
+    cl('__START_____________');
+    cl('paral_a (xmin+이동거리, clickedY지점)',paral_a);
 
-    // mm은 좌우 전체의 기울기로 낮은 기울기이므로, 각도 높은 편도 기울기로 바꾸어준다(2로나눔)
-    cl(/CUR픽셀의 Xmin + 이동(X좌로부터의 거리)/, (upperLine[0] - mm * ym_go) + (middleLine[0] - (upperLine[0] - mm * ym_go)));
-  */
-
-    /*
-    let ym_go2 = parrLine[3] - upperLine[3];  // 병행 라인이 얼마나 밑으로 갔는지.
-    // 1; 전 픽셀 가로 길이
-    // 2; Cur(Given) 픽셀 Xmin(X좌 시작점)
-    // 3; Cur(Given) 픽셀 Xmax(X좌 끝점)
-    // 4; 
-    let arg1 = lowerLine[1] - lowerLine[0];
-    let arg2 = upperLine[0] - (mm / 2 * ym_go);
-    let arg3 = upperLine[1] + (mm / 2 * ym_go); // negative? abs needed?
-    let arg4 = middleLine[0] - (upperLine[0] - mm * ym_go);
-    //setParrLine(arg1, arg2, arg3, arg4);
-
-    let midx1 = upperLine[0] - (mm/2*ym_go);
-    let midx2 = upperLine[1] + (mm / 2 * ym_go);
-    let mid_cx = midx2 - midx1;
-    cl("MID LINE CX? ");
-    cl(mid_cx);
-    cl("ym_go? how much");
-    cl(ym_go);
-    //cl(getRatio(arg1, 10, middleLine[1] - middleLine[0]));
-*/
+    cl('xcoord',xcoord); //19  현시점이 아닌 y+15시점의 xmin 으로부터의 거리
+    cl('xper2', xper2);  //11 15
+    cl('현위치서 15 down된 xmin', parseInt(xmin), 'xmax', parseInt(xmax)); //165 136
   }
-  // four t,b, l,r pixels for bars.
-
-  cl("four px, and py checking:");
-  cl(fourpy);
-  cl(fourpx);
 
   rect_cx.value = fourpx[1] - fourpx[0];
   rect_cy.value = fourpy[1] - fourpy[0];
@@ -1242,8 +1118,8 @@ g_layer1.addEventListener('mousedown', function (ev) {
 
   // SELECTED COLOR PRINT (from global_context) 
   let pix1 = getPixel(imgData, x1, y1);
-  //console.log('Normal_CutMode', x1, y1);
-  console.log('PixelVal:', pix1[0], pix1[1], pix1[2]);
+  //console.log('찍은 픽셀 색깔 :', pix1[0], pix1[1], pix1[2]);
+
   colNotSelect = [pix1[0], pix1[1], pix1[2]]; // ACTUALLY SELECTED BY MOUSE
   /*if (x1 >= 0 && y1 >= 0 && x1 < layer1.width && y1 < layer1.height) {
     let pix = makeImageDataFrom(img).data;
@@ -1261,34 +1137,13 @@ g_layer1.addEventListener('mousedown', function (ev) {
 document.addEventListener('keydown', function (event) {
   let keycode = event.keyCode;
   let altkey = event.altKey;
-  let ctrlkey = event.ctrlKey;
+  //let ctrlkey = event.ctrlKey;
   if (altkey) {
     if (54 == keycode) {//alt-6
-      restoreImageArrN(0);
-      let lamper = document.getElementById('lamp1');
-      lamper.style.backgroundColor = "#edd";
-      lamper.innerHTML = "Image 1";
     } else if (55 == keycode) {//alt-7
-      restoreImageArrN(1);
-      let lamper = document.getElementById('lamp1');
-      lamper.style.backgroundColor = "#edd";
-      lamper.innerHTML = "Image 2";
     } else if (56 == keycode) {//alt-8 
-      restoreImageArrN(2);
-      let lamper = document.getElementById('lamp1');
-      lamper.style.backgroundColor = "#edd";
-      lamper.innerHTML = "Image 3";
     } else if (57 == keycode) {//alt-9        
-      restoreImageArrN(3);
-      let lamper = document.getElementById('lamp1');
-      lamper.style.backgroundColor = "#edd";
-      lamper.innerHTML = "Image 4";
-	} else if (75 == keycode) {//alt-K.
-		let lamper = document.getElementById('lamp1');
-		lamper.style.backgroundColor = "#ded";
-		lamper.innerHTML = "Copied." + getRandomInt(0,1000);
-		
-		copyImage();
+  	} else if (75 == keycode) {//alt-K.
     } else if (48 == keycode) {//alt-0
       // alt6~9 restoring images, 0: different feature.
       let rectCut = [0,0,600,400]; // coord base. (not width,height)
