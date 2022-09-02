@@ -865,7 +865,7 @@ function getRandomInt(min, max) {
 }
 
 
-
+// https://postimg.cc/PC8fqfs1
 // 한쪽 면만 고려한 Min Max.
 // let xxx = getXMinLeftSide(6,5, 5,8, 7);
 //let xxx = getXMinLeftSide(6, 5, 5,8, 8.0); =>expect ret=5.
@@ -883,23 +883,25 @@ function getXMinLeftSide(x1up, x1dn, y1,y2, yclick) {
   // y눌린좌표 실 적용 y=mx 에서 x값 유도
   // x= y/m
   // x= y/m + 시작점.
-  let xstart = x1up + ((yclick - y1) / (mm));
+  let x_Min = x1up + ((yclick - y1) / (mm));
   
   // for debug.
   //dbg1 = [xstart, yclick, y1, mm];
   //console.log(dbg1);
 
-  return xstart;  
+  return x_Min;  
 }
 
-function getXMaxRightSide(x2up, x2dn, y1, y2, yclick) {
+// https://postimg.cc/PC8fqfs1
+// https://imgpile.com/i/Ttyy9L
+function getXMaxRightSide(x2up, x2dn, y1_edge, y2_edge, yclick) {
   let xlong_right = x2dn - x2up; //1
-  let ylong_whole = y2 - y1;
+  let ylong_whole = y2_edge - y1_edge;
   let mm = (ylong_whole / xlong_right);
 
-  let xend = x2up + ((yclick - y1) / (mm));
+  let x_Max = x2up + ((yclick - y1_edge) / (mm));
 
-  return xend;
+  return x_Max;
 }
 
 
@@ -929,18 +931,18 @@ function getRatio(xup_cx, xup_n, mid_cx) {
 }
 
 
-// get left TILT
+// get left TILT ∠
 function getm1() {
-  let ygo = (lowerLine[3] - upperLine[3]);
-  let m1 = ygo / (upperLine[0] - lowerLine[0]);
+  let ygo = (lowerLine[3] - upperLine[3]); // y2-y1
+  let m1 = ygo / (upperLine[0] - lowerLine[0]); // x1up - x1dn
 
   return m1;
 }
 
-// get left TILT
+// get right TILT ⦣
 function getm2() {
   let ygo = (lowerLine[3] - upperLine[3]);
-  let m2 = ygo / (lowerLine[1] - upperLine[1]);
+  let m2 = ygo / (lowerLine[1] - upperLine[1]); // x2up - x2dn
 
   return m2;
 }
@@ -953,24 +955,25 @@ function calcRatioStep2(clickY1) {
     cl("ret_right[우끝점]", ret_right);	// 좌측시작점
   //*/
   
-  //upperLine = [fourpx[0], fourpx[1], clickedY, clickedY];
-
   let clickedY2 = (clickY1 - upperLine[2]);
 
   let m1 = getm1();
   let m2 = getm2();
 
   // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
-  let xmin = upperLine[0] - (clickedY2 / m1);
-  let xmax = upperLine[1] + (clickedY2 / m2);
-
-  let xtotal = (xmax - xmin);
-  let x_percent = (clickedX - xmin) / xtotal * 100;
-  //cl("[calc] X-Percent:", x_percent);
+  //let xmin = upperLine[0] - (clickedY2 / m1);
+  //let xmax = upperLine[1] + (clickedY2 / m2);
+  //let xtotal = (xmax - xmin);
+  //let x_percent = (clickedX - xmin) / xtotal * 100;
 
   // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
-  let perc = calcAvg(ret_left, ret_right, (clickedY2/m1));
+  let perc = calcAvg(ret_left, ret_right, clickedX);
+
+  cl("[calc] X-Percent & perc:", x_percent, perc);  
   //return [xmin, x_percent, xmax, ret_left, -1, ret_right];
+
+  //debugger;
+
   return [ret_left, perc, ret_right];
 }
 
@@ -982,31 +985,6 @@ let ret1;
  */
 function calcRatioStep(clickY1) {
   ret1 = calcRatioStep2(clickY1);
-
-
-  /* // 매우 잘 잡힘. (Xmin ~ XMax 2개 값)
-    let ret_left = getXMinLeftSide(upperLine[0], lowerLine[0], upperLine[2], lowerLine[2], clickY1);
-    cl("ret_left[좌시작점], upperLine", ret_left, upperLine);	// 좌측시작점
-    let ret_right = getXMaxRightSide(upperLine[1], lowerLine[1], upperLine[2], lowerLine[2], clickY1);
-    cl("ret_right[우끝점]", ret_right);	// 좌측시작점
-  //*/
-
-  /*
-  let clickedY2 = (clickY1 - upperLine[2]);
-  let ygo = (lowerLine[3] - upperLine[3]);
-  let m1 = ygo / (upperLine[0] - lowerLine[0]);
-  let m2 = ygo / (lowerLine[1] - upperLine[1]);
-  // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
-  let xmin = upperLine[0] - (clickedY2 / m1);
-  let xmax = upperLine[1] + (clickedY2 / m2);
-
-  let xtotal = (xmax - xmin);
-  let x_percent = (clickedX - xmin) / xtotal * 100;
-  //cl("[calc] X-Percent:", x_percent);
-
-  // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
-  return [xmin, x_percent, xmax];
-  */
 
   return ret1;
 }
