@@ -16,11 +16,14 @@ let rect_cy = document.getElementById('rect_cy');
 let fourpx = [-1, -1];
 let fourpy = [-1, -1];
 
-let upperLine = [-1, -1, -2, -2];
-let lowerLine = [-1, -1, -2, -2];
+//let upperLine = [-1, -1, -2, -2];
+//let lowerLine = [-1, -1, -2, -2];
 let middleLine = [-1, -1];
-let clickedX = -1;
-let clickedY = -1;
+let g_clickedX = -1;
+let g_clickedY = -1;
+
+let x1up, x1dn, y1up, y1dn;
+let x2up, x2dn;
 
 let paral_a = [-1, -1];
 
@@ -30,8 +33,8 @@ let pyArr = [];
 let cutMode = 'none'; // lr , etc.
 
 let colAllias = {
-  very_darkgray: [33,33,33],
-  gray128: [128,128,128],
+  very_darkgray: [33, 33, 33],
+  gray128: [128, 128, 128],
   white222: [222, 222, 222],
   book_231: [231, 218, 205]
 };
@@ -46,8 +49,6 @@ const cl = console.log.bind(console);
 
 
 
-
-
 function storeGuideAsCookie() {	// (cx,cy)
   setCookie('px0', fourpx[0], 7);
   setCookie('py0', fourpy[0], 7); // clicked mouse position.
@@ -56,14 +57,14 @@ function storeGuideAsCookie() {	// (cx,cy)
   setCookie('py1', fourpy[1], 7);
 
   /*
-	coommit 커밋토?
+  coommit 커밋토?
   setCookie('px3', fourpx[3], 7);
   setCookie('py3', fourpy[3], 7);*/
 }
 
 function getGuideFromCookie() {
   fourpx[0] = getCookie('px0');
-  fourpy[0] = getCookie('py0');  
+  fourpy[0] = getCookie('py0');
 
   fourpx[1] = getCookie('px1');
   fourpy[1] = getCookie('py1');
@@ -73,7 +74,7 @@ function getGuideFromCookie() {
   fourpx[3x] = getCookie('px3');
   fourpy[3x] = getCookie('py3');  */
 
-  console.log(fourpx, fourpy, " was loaded");  
+  console.log(fourpx, fourpy, " was loaded");
 
 }
 
@@ -116,30 +117,6 @@ function changeLabelCol() {
 
 }
 
-// fourpx, fourpy
-function store4points(fpx, fpy) {
-  //let tmp1 = [fpx[0], fpx[1], fpx[2], fpx[3]];
-  //let tmp2 = [fpy[0], fpy[1], fpy[2], fpy[3]];
-  let tmp1 = [fpx[0], fpx[1]];
-  let tmp2 = [fpy[0], fpy[1]];
-
-  pxArr.push(tmp1);
-  pyArr.push(tmp2);
-
-  if (pxArr.length > 3) {
-    pxArr.splice(0, 1);
-    pyArr.splice(0, 1);
-  }
-
-  //cl('You got great?');
-  console.log(pxArr);
-  console.log(pyArr);
-}
-// pull 4 points edges to use for cutting.
-function pull4points(nn) {
-  fourpx = pxArr[nn]; // e.g. pxArr[nn] == [x1, y1]
-  fourpy = pyArr[nn];
-}
 
 function ShowTollVal(ev) {
   document.getElementById("lblToll").innerHTML = ev.value;
@@ -158,13 +135,13 @@ function cropImage(img1, x1, y1, xw, y2) {
   canvas.height = y2 - y1;
 
   let ctx = canvas.getContext('2d');
-  ctx.drawImage(img1, x1, y1, xw - x1, y2 - y1, 0, 0, xw-x1, y2-y1);
-  
+  ctx.drawImage(img1, x1, y1, xw - x1, y2 - y1, 0, 0, xw - x1, y2 - y1);
+
   img1.src = canvas.toDataURL();  // restoring virtual canvas to img1 (source)
   img1.width = xw - x1;
   img1.height = y2 - y1;
 
-  console.log('new cropped width',canvas.width);
+  console.log('new cropped width', canvas.width);
 
   return img1;
 }
@@ -178,36 +155,6 @@ function drawDataURIOnCanvas(strDataURI, canvas) {
     canvas.getContext("2d").drawImage(img, 0, 0);
   });
   img.setAttribute("src", strDataURI);
-}
-
-function restoreImageArrN(nn) {
-  let idx = Number(document.getElementById('imgidx').value);
-  console.log(idx, "97!", g_stores);
-
-  g_layer1.width = g_stores[nn].width;
-  g_layer1.height = g_stores[nn].height;
-  drawDataURIOnCanvas(g_stores[nn].src, g_layer1);
-  console.log(g_dataIMG.width, "is wid");
-}
-function restoreImageArr() {
-  let idx = Number(document.getElementById('imgidx').value);
-  console.log(idx, "97!", g_stores);
-
-  g_layer1.width = g_stores[0].width;
-  g_layer1.height = g_stores[0].height;
-  drawDataURIOnCanvas(g_stores[0].src, g_layer1);
-  console.log(g_dataIMG.width, "is wid");
-}
-function storeImageArr() {
-  let dataIMG = new Image();
-  dataIMG.src = g_layer1.toDataURL();
-  g_stores.push(dataIMG);
-  
-  if (g_stores.length > 4) {
-	  g_stores.splice(0,1);
-  }
-
-  storeGuideAsCookie();
 }
 
 /**
@@ -228,22 +175,31 @@ function saveCX() {
 function saveUpperLine() {
   let txtUpper = document.getElementById('upper_cx');	// show the clicked rectangle size
   txtUpper.value = fourpx[1] - fourpx[0];
-  //upperLine = [fourpx[0], fourpx[1], fourpy[0], fourpy[1]];
-  upperLine = [fourpx[0], fourpx[1], clickedY, clickedY];
+  //upperLine = [fourpx[0], fourpx[1], clickedY, clickedY];
+  x1up = fourpx[0];
+  x2up = fourpx[1];
+  y1up = g_clickedY;
 }
 
 function saveLowerLine() {
   let txtLower = document.getElementById('lower_cx');	// show the clicked rectangle size
   txtLower.value = fourpx[1] - fourpx[0];
-  lowerLine = [fourpx[0], fourpx[1], clickedY, clickedY];
+  //lowerLine = [fourpx[0], fourpx[1], clickedY, clickedY];
+  x1dn = fourpx[0];
+  x2dn = fourpx[1];
+  y1dn = g_clickedY;
 }
 
+/*
 function saveMiddleLine() {
   let txtMiddle = document.getElementById('middle_cx');	// show the clicked rectangle size
   txtMiddle.value = fourpx[1] - fourpx[0];
-  middleLine = [fourpx[0], fourpx[1], clickedY, clickedY];
-}
+  middleLine = [fourpx[0], fourpx[1], g_clickedY, g_clickedY];
+}*/
 
+
+// HTML INPUT사용
+/*
 function calcSlope() {
   let txtSlope = document.getElementById('slope');	// show the clicked rectangle size
   let xgo = (lowerLine[1] - lowerLine[0]) - (upperLine[1] - upperLine[0]);
@@ -252,7 +208,7 @@ function calcSlope() {
   txtSlope.value += "_Umha";
   //txtSlope.value += ',' + (lowerLine[1] - lowerLine[0]) / (upperLine[1] - upperLine[0])/2;
   cl('가 (2x) 기울기:' + (ygo / xgo));  // xgo;x를 두번 갔으니 하나는 빼어야...
-}
+}*/
 
 
 function restoreImage() {
@@ -265,7 +221,7 @@ function restoreImage() {
 //
 //
 function copyImage() {
-  g_layer1.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
+  g_layer1.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
 }
 
 // paint original image and store info
@@ -294,13 +250,13 @@ function drawMeasure() {
   g_context.strokeStyle = 'rgb(63,99,0)';
 
   g_context.beginPath();
-  //context.rect(fourpx[0], fourpy[0], fourpx[1] - fourpx[0], fourpy[1] - fourpy[0]);
+
   // 가로를 알려주는 세로선
   g_context.moveTo(fourpx[0], 0);
   g_context.lineTo(fourpx[0], g_img.height);
   // 가로를 알려주는 세로선
   g_context.moveTo(fourpx[1], 0);
-  g_context.lineTo(fourpx[1], g_img.height);  
+  g_context.lineTo(fourpx[1], g_img.height);
 
   // horizontal line for Y1
   g_context.moveTo(0, fourpy[0]);
@@ -309,6 +265,15 @@ function drawMeasure() {
   // horizontal line for Y2
   g_context.moveTo(0, fourpy[1]);
   g_context.lineTo(g_img.width, fourpy[1]);
+
+  // NEW HORIZON
+  g_context.strokeStyle = 'rgb(93,59,0)';
+  g_context.moveTo(x1up, g_img.height/2);
+  g_context.lineTo(x1dn, g_img.height/2);  
+
+  // NEW YLONG
+  g_context.moveTo(g_img.width / 2, y1up);
+  g_context.lineTo(g_img.width / 2, y1dn);
 
   g_context.stroke();
 
@@ -322,31 +287,27 @@ function drawMeasure() {
 Sadarigol Drawing... (BGI)
 */
 function drawTripe() {
-	  g_context.strokeStyle = 'rgb(242,112,70)';
+  g_context.strokeStyle = 'rgb(242,112,70)';
 
   g_context.beginPath();
   // 윗변 알려주는 세로선
-  g_context.moveTo(upperLine[0], upperLine[2]);
-  g_context.lineTo(upperLine[1], upperLine[3]);
+  g_context.moveTo(x1up, y1up);
+  g_context.lineTo(x2up, y1up);
 
   // 밑변 알려주는 세로선
-  g_context.moveTo(lowerLine[0], lowerLine[2]);
-  g_context.lineTo(lowerLine[1], lowerLine[3]);
-
-  // 중간변 알려주는 세로선
-  g_context.moveTo(middleLine[0], middleLine[2]);
-  g_context.lineTo(middleLine[1], middleLine[3]);  
+  g_context.moveTo(x1dn, y1dn);
+  g_context.lineTo(x2dn, y1dn);
 
   // 사다리 좌측 지선
-  g_context.moveTo(upperLine[0], upperLine[2]);
-  g_context.lineTo(lowerLine[0], lowerLine[2]);
+  g_context.moveTo(x1up, y1up);
+  g_context.lineTo(x1dn, y1dn);
 
-  g_context.moveTo(upperLine[1], upperLine[2]);
-  g_context.lineTo(lowerLine[1], lowerLine[2]);  
+  g_context.moveTo(x2up, y1up);
+  g_context.lineTo(x2dn, y1dn);
 
   /*
   g_context.moveTo(lowerLine[0], 0);
-  g_context.lineTo(lowerLine[1], g_img.height);*/  
+  g_context.lineTo(lowerLine[1], g_img.height);*/
 
   g_context.stroke();
 
@@ -356,8 +317,8 @@ function drawTripe() {
   g_context.beginPath();
   g_context.strokeRect(middleLine[0], middleLine[2], 4, 4);
 
-  
-  g_context.strokeRect(paral_a[0], paral_a[1], 4, 4);  
+
+  g_context.strokeRect(paral_a[0], paral_a[1], 4, 4);
 }
 
 
@@ -398,51 +359,6 @@ function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
 }
 
 
-function chkRightBlack(imgd, bg) {
-  let pix = makeImageDataFrom(imgd).data;
-  let newColor = { r: 0, g: 0, b: 0, a: 0 };
-  let ret2 = parseInt(imgd.width / 2);  // The middle position is left max.
-
-  for (let j = 0; j < imgd.height; j++) {
-    let yb = (j * imgd.width * 4);  // base row
-    let x1 = yb + 0;
-    let x2 = yb + imgd.width * 4; // max: 50px
-    let ret1 = imgd.width-1;
-
-    // y,{x loop:horizon} needed e.g. x1;0~x2;4 then 0123
-    for (let i = x2-4; i >= x1; i -= 4) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      let de = deltaE([r, g, b], bg); // 3.175
-      // If its black, go on
-      //if (j == 35)
-        //console.log(de, 'RIGHT! Col:', r,g,b, 'yx',j,',',(i-(j*imgd.width*4))/4);
-      if (de < 25) {
-        //console.log(j, 'this J out', i);
-        ret1--;
-        continue;
-      }
-      if (ret2 < ret1) { // if new one is greater, apply it.
-        //console.log(j, '} ** New Right:', ret1, '>', ret2, 'total height', imgd.height, 'is height **');
-        ret2 = ret1;
-        break;
-      } else {
-        // to stop further progress to left, from right.
-        //console.log(j, 'Not greater, skip'); 
-        break;
-      }
-
-      //ret2 = (ret2 < ret1) ? ret1 : ret2;
-    };
-
-  }
-
-  //console.log('right;', ret2);
-  return ret2;
-
-}
 
 function getMousePosition(canvas, event) {
   let rect = canvas.getBoundingClientRect();
@@ -450,10 +366,10 @@ function getMousePosition(canvas, event) {
   let y = event.clientY - rect.top;
   console.log("Coordinate x: " + x,
     "Coordinate y: " + y);
-} 
+}
 
 //let idata1 = context.getImageData(0, 0, img.width, img.height);
-function setPixel(imgData, x1, y1, rr,gg,bb) {
+function setPixel(imgData, x1, y1, rr, gg, bb) {
   let index = y1 * imgData.width + x1;
   let i = index * 4, d = imgData.data;
 
@@ -463,181 +379,7 @@ function setPixel(imgData, x1, y1, rr,gg,bb) {
   // d[n] (pixel) 조정. (d = imgData.data)
 }
 
-function distortPixels() {
-	let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-	//console.log(g_img.width, 'is Width L448;');
-  
-  let wide1 = idata1.width - (idata1.width % 4);
 
-	for (let i=0; i<idata1.height; i++) {	// UNTIL' CHECK TODO.
-		for (let j=0; j<wide1; j+=2) { // UNTIL' CHECK TODO.
-			let pix1 = getPixel(idata1, j, i);
-      let pix2 = getPixel(idata1, j+1, i);
-      let pix3 = getPixel(idata1, j + 2, i);
-      let pix4 = getPixel(idata1, j + 3, i);
-			let r1 = pix1[0];	let g1 = pix1[1];	let b1 = pix1[2];
-      let r2 = pix2[0]; let g2 = pix2[1]; let b2 = pix2[2];
-      let r3 = pix3[0]; let g3 = pix3[1]; let b3 = pix3[2];
-      let r4 = pix4[0]; let g4 = pix4[1]; let b4 = pix4[2];
-
-      /*if (i==150) {
-        console.log(j, "Gold458: ", pix);
-        console.log(j, "Gold458: ", r2,g2,b2);
-      }*/
-      
-      setPixel(idata1, j+0, i, r4, g4, b4);
-			setPixel(idata1, j+1, i, r3, g3, b3);
-      setPixel(idata1, j+2, i, r2, g2, b2);
-      setPixel(idata1, j+3, i, r1, g1, b1);
-		}
-	}
-
-  g_context.putImageData(idata1, 0,0);
-	//setPixel(idata1, 10,10, r2,g2,b2);
-}
-
-function changeLines() {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let add1 = 99 + ((j*10) % 100);
-      let pix = getPixel(idata1, j, i);
-      let r2 = (pix[0] + add1) % 256;
-      let g2 = (pix[1] + add1) % 256;
-      let b2 = (pix[2] + add1) % 256; // MOD PROC TODO.
-
-      if (i == 150 && j<30) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }
-
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
-}
-
-
-function changeBackLines() {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let add1 = 99 + ((j * 10) % 100);
-      let pix = getPixel(idata1, j, i);
-      let r2 = (256 + (pix[0] - add1)) % 256;
-      let g2 = (256 + (pix[1] - add1)) % 256;
-      let b2 = (256 + (pix[2] - add1)) % 256; // MOD PROC TODO.
-
-
-      if (i == 150 && j < 30) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }
-
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
-}
-
-function changeCols() {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let add1 = 99 + ((i * 10) % 100);
-      let pix = getPixel(idata1, j, i);
-      let r2 = (pix[0] + add1) % 256;
-      let g2 = (pix[1] + add1) % 256;
-      let b2 = (pix[2] + add1) % 256; // MOD PROC TODO.
-
-      if (i == 150 && j < 30) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }
-
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
-}
-
-
-function changeBackCols() {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let add1 = 99 + ((i * 10) % 100);
-      let pix = getPixel(idata1, j, i);
-      let r2 = (256 + (pix[0] - add1)) % 256;
-      let g2 = (256 + (pix[1] - add1)) % 256;
-      let b2 = (256 + (pix[2] - add1)) % 256; // MOD PROC TODO.
-
-
-      if (i == 150 && j < 30) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }
-
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
-}
-
-
-function changePixels2(r11, g11, b11) {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-  //console.log(g_img.width, 'is Width L448;');
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let pix = getPixel(idata1, j, i);
-      let r2 = (pix[0] + r11) % 256;
-      let g2 = (pix[1] + g11) % 256;
-      let b2 = (pix[2] + b11) % 256; // MOD PROC TODO.
-
-      /*if (i == 150) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }*/
-
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
- }
-
-function changeBackPixels2(r11, g11, b11) {
-  let idata1 = g_context.getImageData(0, 0, g_img.width, g_img.height);
-
-  for (let i = 0; i < idata1.height; i++) {	// UNTIL' CHECK TODO.
-    for (let j = 0; j < idata1.width; j++) { // UNTIL' CHECK TODO.
-      let pix = getPixel(idata1, j, i);
-      let r2 = (256 + (pix[0] - r11)) % 256;
-      let g2 = (256 + (pix[1] - g11)) % 256;
-      let b2 = (256 + (pix[2] - b11)) % 256; // MOD PROC TODO.
-
-      /*if (i == 150) {
-        console.log(j, "Gold48: ", pix);
-        console.log(j, "Gold48: ", r2, g2, b2);
-      }*/
-      
-      //setPixel(idata1, j, i, r2, g2, b2);
-      setPixel(idata1, j, i, r2, g2, b2);
-    }
-  }
-
-  g_context.putImageData(idata1, 0, 0);
-}
 
 
 // REMOVE? stackover-function. { data: [r,g,b,a,r,g,b,a,r,g,..], ... }
@@ -651,8 +393,8 @@ function getPixel(imgData, x, y) {
 
 // get sequential index of xx, yy
 function getIndex(xx, yy, imgd) {
-  let idx = yy * imgd.width*4;
-  idx += xx*4;
+  let idx = yy * imgd.width * 4;
+  idx += xx * 4;
   return idx;
 }
 
@@ -663,84 +405,10 @@ function getYFromIndex(idx, imgd) {
 }
 
 function getXFromIndex(idx, imgd) {
-  let row1 = 4*imgd.width;
+  let row1 = 4 * imgd.width;
   let xx = parseInt(idx % row1) / 4;
   return xx;
 }
-
-function chkTopBlack(imgd, bg) {
-  let pix = makeImageDataFrom(imgd).data;
-  let newColor = { r: 0, g: 0, b: 0, a: 0 };
-  let row1 = 4 * imgd.width;
-  let ret2 = imgd.height-1;
-  // horizontal first.
-  for (let j = 0; j < imgd.width; j++) {
-    //let y2old = getIndex(j, imgd.height, imgd) - row1; // max-bottom
-    let y2 = getIndex(j, imgd.height - 1, imgd); // max-bottom
-    let y1 = getIndex(j, 0, imgd);
-
-    let ret1 = 0 - 1; // The first number to be tested is 0, so, do -1.
-
-    for (let i = y1; i < y2; i += row1) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      ret1++; // stepping down.
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        continue;
-      }
-      //console.log(de, ret1, '(', getXFromIndex(i, imgd), getYFromIndex(i, imgd), 'is xy value');
-      if (ret2 > ret1) {
-        ret2 = ret1;
-        //console.log(ret2, "Tret2 changed ");
-        break;
-      }
-    };  // i
-  }   // j
-  //console.log(ret2, "Tret2 returning ");
-  return ret2;
-}
-
-
-// y:160 ~ 966
-function chkBottomBlack(imgd, bg) {
-  let pix = makeImageDataFrom(imgd).data;
-  let newColor = { r: 0, g: 0, b: 0, a: 0 };
-  let row1 = 4*imgd.width;
-  let ret2 = 0;
-    // horizontal first.
-  for (let j = 0; j < imgd.width; j++) {
-    //let y2old = getIndex(j, imgd.height, imgd) - row1; // max-bottom
-    let y2 = getIndex(j, imgd.height - 1, imgd); // max-bottom
-    let y1 = getIndex(j, 0, imgd);
-    //console.log('y1-y2', y1, y2);
-    let ret1 = imgd.height;// - 1;
-    for (let i = y2; i >= y1; i -= row1) {
-      let r = pix[i];
-      let g = pix[i + 1];
-      let b = pix[i + 2];
-
-      ret1--; // stepping up.
-
-      let de = deltaE([r, g, b], bg); // [36, 36, 36]
-      if (de < 25) {
-        continue;
-      }
-      //console.log(de, ret1, '(',getXFromIndex(i,imgd), getYFromIndex(i,imgd), 'is xy value');
-      if (ret2 < ret1) {
-        ret2 = ret1;
-        //console.log(ret2, "Bottom Y Changing");
-        break;
-      }
-    };  // i
-  }   // j
-  //console.log(ret2, "Bottom Y Decided");
-  return ret2;
-}
-
 
 
 // make ImageData from Image (for transparent)
@@ -801,9 +469,9 @@ function imageData2Image(imagedata) {
 // get four points' indice.
 function getFourIndex(x1, y1, width, height) {
   let dist1 = x1;
-  let dist2 = width-x1;
+  let dist2 = width - x1;
   let dist3 = y1;
-  let dist4 = height-y1;
+  let dist4 = height - y1;
 
   let min1 = Math.min(dist1, dist2, dist3, dist4);
   switch (min1) {
@@ -865,37 +533,68 @@ function getRandomInt(min, max) {
 }
 
 
+/**
+ * get Slope.
+ */
+function getMM(x1up, x1dn, y1, y2) {
+  let xlong_left = x1dn - x1up; // xlong/ylong 이 기울기
+  let ylong_whole = y2 - y1;
+
+  let mm = (ylong_whole / xlong_left);
+  
+  return mm;
+}
+
+
+/**
+ *  get X on a Sea-Line(HorizonLine).
+ *      ###############
+        #             ##
+       ##               #
+ x1(min)#◄◄►X              # x2(max)
+      #    ▲              #
+     ##    ▼               #
+     x1dn ####################### x2dn
+ * @param {*} m1 
+ * @param {*} x1dn 
+ * @param {*} yy clicked y(z)
+ * @returns x go from x1min
+ */
+function getX_Horizon(m1, x1dn, yy) {
+  let xx = -(1 / m1) * yy + x1dn;
+  return xx;
+}
+
+
 // https://postimg.cc/PC8fqfs1
 // 한쪽 면만 고려한 Min Max.
 // let xxx = getXMinLeftSide(6,5, 5,8, 7);
 //let xxx = getXMinLeftSide(6, 5, 5,8, 8.0); =>expect ret=5.
 //let xxx = getXMinLeftSide(6, 5, 5,8, 7.0); => exp 5.32;
 //let xxx = getXMinLeftSide(6, 5, 5,8, 6.0); => exp 5.68;
-function getXMinLeftSide(x1up, x1dn, y1,y2, yclick) {
+function getXMinLeftSide(x1up, x1dn, y1, y2, yclick) {
   //let xlong_left = x1up - x1dn; //1
-  let xlong_left = x1dn - x1up; //1
+  let xlong_left = x1dn - x1up; // xlong/ylong 이 기울기
   let ylong_whole = y2 - y1;
 
   let mm = (ylong_whole / xlong_left);
-
-  console.log(mm, "is mm");
 
   // y눌린좌표 실 적용 y=mx 에서 x값 유도
   // x= y/m
   // x= y/m + 시작점.
   let x_Min = x1up + ((yclick - y1) / (mm));
-  
+
   // for debug.
   //dbg1 = [xstart, yclick, y1, mm];
   //console.log(dbg1);
 
-  return x_Min;  
+  return x_Min;
 }
 
 // https://postimg.cc/PC8fqfs1
 // https://imgpile.com/i/Ttyy9L
 function getXMaxRightSide(x2up, x2dn, y1_edge, y2_edge, yclick) {
-  let xlong_right = x2dn - x2up; //1
+  let xlong_right = x2dn - x2up; // xlong/ylong 이 기울기
   let ylong_whole = y2_edge - y1_edge;
   let mm = (ylong_whole / xlong_right);
 
@@ -905,15 +604,6 @@ function getXMaxRightSide(x2up, x2dn, y1_edge, y2_edge, yclick) {
 }
 
 
-// different version of getRatio()
-// calcAvg(200,300,210) return : 10%
-function calcAvg(x1, x2, xc) {
-  let xrange = x2 -x1;
-  let xpos = xc - x1;
-  let avg = xpos/xrange*100;
-
-  return avg;
-}
 
 
 // xup_cx, xup_n, mid_cx, mid_n
@@ -930,51 +620,53 @@ function getRatio(xup_cx, xup_n, mid_cx) {
   return ret;
 }
 
+/**
+ * calculate X step regarding Ratio.
+ * / .... 30% xgo ...... /
+ * 전역변수 1개 사용: clickedX.
+ */
+function calcRatioStep3(clickY1) {
+  ///* // 매우 잘 잡힘. (Xmin ~ XMax 2개 값)
+  let Xmin = getXMinLeftSide(x1up, x1dn, y1up, y1dn, clickY1);
+  let Xmax = getXMaxRightSide(x2up, x2dn, y1up, y1dn, clickY1);
 
-// get left TILT ∠
-function getm1() {
-  let ygo = (lowerLine[3] - upperLine[3]); // y2-y1
-  let m1 = ygo / (upperLine[0] - lowerLine[0]); // x1up - x1dn
+  let clickedY2 = (clickY1 - y1up); // 아래로 이동한 거리
 
-  return m1;
+  getMM(x1up, x1dn, clickY1, clickY1);
+  
+  // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
+  let XPercent = convCoord2Pct(ret_left_min, ret_right_max, g_clickedX);
+
+  //debugger;
+
+  //return [ret_left_min, perc, ret_right_max];
+  return {Xmin, XPercent, Xmax};
 }
 
-// get right TILT ⦣
-function getm2() {
-  let ygo = (lowerLine[3] - upperLine[3]);
-  let m2 = ygo / (lowerLine[1] - upperLine[1]); // x2up - x2dn
-
-  return m2;
-}
 
 function calcRatioStep2(clickY1) {
   ///* // 매우 잘 잡힘. (Xmin ~ XMax 2개 값)
-    let ret_left = getXMinLeftSide(upperLine[0], lowerLine[0], upperLine[2], lowerLine[2], clickY1);
-    cl("ret_left[좌시작점], upperLine", ret_left, upperLine);	// 좌측시작점
-    let ret_right = getXMaxRightSide(upperLine[1], lowerLine[1], upperLine[2], lowerLine[2], clickY1);
-    cl("ret_right[우끝점]", ret_right);	// 좌측시작점
+  let ret_left_min = getXMinLeftSide(upperLine[0], lowerLine[0], upperLine[2], lowerLine[2], clickY1);
+  //cl("ret_left[좌시작점]", ret_left_min);	// 좌측시작점
+  let ret_right_max = getXMaxRightSide(upperLine[1], lowerLine[1], upperLine[2], lowerLine[2], clickY1);
+  //cl("ret_right[우끝점]", ret_right_max);	// 좌측시작점
   //*/
-  
-  let clickedY2 = (clickY1 - upperLine[2]);
 
-  let m1 = getm1();
-  let m2 = getm2();
+  let clickedY2 = (clickY1 - upperLine[2]);
 
   // clickedY : NOT-0-BASE ! ! !!! 0 베이스가 아님!
   //let xmin = upperLine[0] - (clickedY2 / m1);
   //let xmax = upperLine[1] + (clickedY2 / m2);
-  //let xtotal = (xmax - xmin);
   //let x_percent = (clickedX - xmin) / xtotal * 100;
 
   // 사다리꼴 좌우 끝값과 퍼센티지 리턴.
-  let perc = calcAvg(ret_left, ret_right, clickedX);
+  let perc = convCoord2Pct(ret_left_min, ret_right_max, g_clickedX);
 
-  cl("[calc] X-Percent & perc:", x_percent, perc);  
-  //return [xmin, x_percent, xmax, ret_left, -1, ret_right];
+  //cl("[calc] X-Percent & perc:", x_percent, perc);  
 
   //debugger;
 
-  return [ret_left, perc, ret_right];
+  return [ret_left_min, perc, ret_right_max];
 }
 
 let ret1;
@@ -984,21 +676,36 @@ let ret1;
  * / .... 30% xgo ...... /
  */
 function calcRatioStep(clickY1) {
-  ret1 = calcRatioStep2(clickY1);
+  //ret1 = calcRatioStep2(clickY1);
+  ret1 = calcRatioStep3(clickY1);
 
   return ret1;
 }
 
-// percentage에 대한 실제 X좌표 리턴.
+// percentage에 대한 실제 X(or Y)좌표 리턴.
 /**
+    ┌──┬┬────────┐
+    └──┴┴────────┘
  * getXCoord(25, 100)
 25
  */
-function getXCoord(x_percent, xtotal) {
-  let ret = (x_percent/100) * xtotal;
+function convPct2Coord(x_percent, xtotal) {
+  let x_or_y = (x_percent / 100) * xtotal;
 
-  return ret;
+  return x_or_y;
 }
+
+// different version of getRatio()
+// calcAvg(200,300,210) return : 10%
+function convCoord2Pct(x1, x2, xc) {
+  let xrange = x2 - x1;
+  let xpos = xc - x1;
+  let avg = xpos / xrange * 100;
+
+  return avg;
+}
+
+
 
 window.addEventListener("paste", function (e) {
   // Handle the event
@@ -1016,7 +723,7 @@ window.addEventListener("paste", function (e) {
         g_layer1.width = this.width;
         g_layer1.height = this.height;
 
-       
+
         paint0Image(g_img, g_drawGrid);
         console.log("img ONLOAD Called", this.width);
       };
@@ -1040,58 +747,56 @@ g_layer1.addEventListener('mousedown', function (ev) {
   if (1 != ev.which)
     return;
 
-    // 마우스 클릭된 좌표
+  // 마우스 클릭된 좌표
   let x1 = ev.offsetX;
   let y1 = ev.offsetY;
 
-/*
-  let ix4 = getFourIndex(x1, y1, img.width, img.height);
-  fourpx[ix4] = x1;
-  fourpy[ix4] = y1;*/
+  cl("clicked:",x1,y1);
 
   // 클릭된 값을 넣는다
   let ix4 = -1;
   if (cutMode == 'cut2lr') {
     ix4 = getLRIndex(x1, g_img.width);
     fourpx[ix4] = x1;
-    clickedX = x1;
-    clickedY = y1;
+    g_clickedX = x1;
+    g_clickedY = y1;
   } else {
     ix4 = getTBIndex(y1, g_img.height);
-    fourpy[ix4] = y1;  
-    clickedX = x1;
-    clickedY = y1; 
-    
-    //cl(/ix4 is for y now/, clickedY);// 조건문 들어오는 것 체크용
+    fourpy[ix4] = y1;
+    g_clickedX = x1;
+    g_clickedY = y1;
+
     // 미들라인은 모든 클릭 라인(Y 좌표 지정용 클릭 시 매번 ASSIGN)
-    middleLine = [clickedX, clickedX */fourpx[1]*/, clickedY, clickedY];
+    //middleLine = [clickedX, clickedX, clickedY, clickedY];
+    // 사다리꼴 안그려지면 복귀(Above)
 
     // X Coord Show, by step regarding x ratio.
-    // xper1 = calcRatioStep(clickedY);
-    xper2 = calcRatioStep(clickedY)[1];	// 함수내서 2번함수 테스트중.
-	//let xper3 = calcRatioStep2(clickedY)[1];
-	
+    //xper2 = calcRatioStep(clickedY)[1];	// 함수내서 2번함수 테스트중.
+    g_tmp1 = calcRatioStep3(g_clickedY);
+    //xper2 = g_tmp1[1];
+    xper2 = g_tmp1.XPercent;
 
+    // 아래 부분은 함수로 하여 여러 곳에 찍게 해야 하지 않나?
+    // 여러 Y값을 주어...
     // 리턴을 퍼센테이지로 하므로 어긋난다 (5,10,15아래 위치가...)
-    let xmin = calcRatioStep(clickedY + 15)[0];
-    let xmax = calcRatioStep(clickedY + 15)[2];
+    let xmin = calcRatioStep(g_clickedY + 15)[0];
+    let xmax = calcRatioStep(g_clickedY + 15)[2];
 
-    let xcoord = getXCoord(xper2, xmax - xmin);
+    let xcoord = convPct2Coord(xper2, xmax - xmin);
 
-    paral_a = [xmin + xcoord, clickedY + 15];
-    //paral_a = [xmin + xcoord, clickedY];
+    paral_a = [xmin + xcoord, g_clickedY + 15];
 
     cl('__START_____________');
-    cl('paral_a (xmin+이동거리, clickedY지점)',paral_a);
+    //cl('paral_a (xmin+이동거리, clickedY지점)', paral_a);
 
-    cl('xcoord',xcoord); //19  현시점이 아닌 y+15시점의 xmin 으로부터의 거리
-    cl('xper2', xper2);  //11 15
+    cl('xcoord', toRound(xcoord)); //19  현시점이 아닌 y+15시점의 xmin 으로부터의 거리
+    cl('xper2', toRound(xper2), "%");  //11 15
     cl('현위치서 15 down된 xmin', parseInt(xmin), 'xmax', parseInt(xmax)); //165 136
   }
 
   rect_cx.value = fourpx[1] - fourpx[0];
   rect_cy.value = fourpy[1] - fourpy[0];
-  
+
   paint0Image(g_img, true); // to draw Measure.
 
   // SELECTED COLOR PRINT (from global_context) 
@@ -1099,32 +804,23 @@ g_layer1.addEventListener('mousedown', function (ev) {
   //console.log('찍은 픽셀 색깔 :', pix1[0], pix1[1], pix1[2]);
 
   colNotSelect = [pix1[0], pix1[1], pix1[2]]; // ACTUALLY SELECTED BY MOUSE
-  /*if (x1 >= 0 && y1 >= 0 && x1 < layer1.width && y1 < layer1.height) {
-    let pix = makeImageDataFrom(img).data;
-    let ii = getIndex(x1, y1, img);
-    let r = pix[ii];
-    let g = pix[ii + 1];
-    let b = pix[ii + 2];
-    colNotSelect = [r, g, b];
-
-    console.log('Normal_CutMode',x1, y1, colNotSelect);
-  }*/
- 
 });
+
+function toRound(num) {
+  return Math.round(num * 10) / 10;  
+}
 
 document.addEventListener('keydown', function (event) {
   let keycode = event.keyCode;
   let altkey = event.altKey;
-  //let ctrlkey = event.ctrlKey;
+
   if (altkey) {
     if (54 == keycode) {//alt-6
     } else if (55 == keycode) {//alt-7
-    } else if (56 == keycode) {//alt-8 
-    } else if (57 == keycode) {//alt-9        
-  	} else if (75 == keycode) {//alt-K.
+    } else if (75 == keycode) {//alt-K.
     } else if (48 == keycode) {//alt-0
       // alt6~9 restoring images, 0: different feature.
-      let rectCut = [0,0,600,400]; // coord base. (not width,height)
+      let rectCut = [0, 0, 600, 400]; // coord base. (not width,height)
       rectCut[0] = Math.min(...fourpx);
       rectCut[1] = Math.max(...fourpx);
       rectCut[2] = Math.min(...fourpy);
@@ -1132,69 +828,13 @@ document.addEventListener('keydown', function (event) {
 
       console.log(rectCut, 'is rect for cutting 443');
     } else if (49 == keycode) {//alt_1 // NOT LIKE'D', REMOVE BG BY COLOR
-      let bg = [36, 36, 36];
-      bg = colAllias[selcol1.value];
-      bg = (bg == null) ? colNotSelect : bg;
-      console.log(bg, 'its bg');
-
-      g_context.clearRect(0, 0, g_img.width, g_img.height);
-      let x1 = chkLeftBlack(g_img, bg); //absolute poses.
-      let x2 = chkRightBlack(g_img, bg);  // 이제, 중간부터 하면 안됨
-      let y1 = chkTopBlack(g_img, bg);
-      let y2 = chkBottomBlack(g_img, bg); // Search Not Only Center
-
-      // CROP WITH +-10 MARGIN
-      //cropImage(img, x1-10, y1-10, x2+10, y2+10); // 10x20
-      let mg = Number(range1.value);  // margin value from original image
-      //console.log('mg',mg);      //mg = 0;
-      cropImage(g_img, x1-mg, y1-mg, x2+mg, y2+mg); // 10x20
-
-      // ACTUAL VIEWPORT RESIZING
-      g_layer1.width = g_img.width;
-      g_layer1.height = g_img.height;
-      console.log(x1,x2,y1,y2,'x1x2 y1y2');
     } else if (50 == keycode) {// ALT_2
-      let bg = [37, 37, 37];
-      bg = colAllias[selcol1.value];
-      bg = (bg == null) ? colNotSelect : bg;
-
-      g_context.clearRect(0, 0, g_img.width, g_img.height);
-      let x1 = chkGoLeftBG(g_img, bg, g_toll); //absolute poses.
-      let x2 = chkGoRightBG(g_img, bg, g_toll);  
-      let y1 = chkGoUpBG(g_img, bg, g_toll);
-      let y2 = chkGoDownBG(g_img, bg, g_toll); // Search Not Only Center
-
-      //x1 = 0;
-      //x2 = img.width-1;
-      //y1 = 0;
-      //y2 = img.height-1;
-
-      // CROP WITH +-10 MARGIN
-      let mg = Number(range1.value);  // margin value from original image
-      cropImage(g_img, x1 - mg, y1 - mg, x2 + mg, y2 + mg); // 10x20
-
-      // ACTUAL VIEWPORT RESIZING
-      g_layer1.width = g_img.width;
-      g_layer1.height = g_img.height;
-      console.log('ALT2 Result x1x2 y1y2',x1, x2, y1, y2);
     }
   } else {  // if NOT ALT.
     if (82 == keycode) { //'R'
       cutMode = (cutMode == 'cut2lr' ? cutMode = 'cut2tb' : cutMode = 'cut2lr');
-      
+
     } else if (68 == keycode) { //'D' ; Cut the Manual Region
-      console.log(cutMode);
-
-      cropImage(g_img, fourpx[0], fourpy[0], fourpx[1], fourpy[1]); // 10x20
-      
-      g_layer1.width = g_img.width;
-      g_layer1.height = g_img.height;
-      g_drawGrid = false;
-
-      // SAVE AS ONE PRESET.
-      cutMode = 'none';
-      store4points(fourpx, fourpy);
-      changeLabelCol();
     } else if (69 == keycode) { //'E'
       cutMode = 'cutlr';
       console.log(cutMode);
@@ -1212,34 +852,24 @@ document.addEventListener('keydown', function (event) {
     } else if (51 == keycode) { //'3' (PULL)
       pull4points(2);
       g_drawGrid = true;
-      paint0Image(g_img, g_drawGrid);      
+      paint0Image(g_img, g_drawGrid);
     } else if (52 == keycode) { //'4' (PULL)
       pull4points(3);
       g_drawGrid = true;
-      paint0Image(g_img, g_drawGrid);      
+      paint0Image(g_img, g_drawGrid);
     } else if (192 == keycode) { //'`' to SAVE
-
-      // SAVE AS ONE PRESET.
-      cutMode = 'none';
-      console.log(cutMode);
-
-      console.log(fourpx, "fourpx");
-      console.log(fourpy, "fourpy");
-      store4points(fourpx, fourpy);
-
-      changeLabelCol();
     } else if (37 == keycode) { // Keys.Left
       fourpx[0]--;
       paint0Image(g_img, g_drawGrid);
     } else if (39 == keycode) { // Keys.Right
       fourpx[0]++;
       paint0Image(g_img, g_drawGrid);
-    } else if (113 == keycode) { // Keys.Right  
+    } else if (113 == keycode) { // F2: left  
       fourpx[1]--;
-      paint0Image(g_img, g_drawGrid);      
-    } else if (115 == keycode) { // Keys.Right        
+      paint0Image(g_img, g_drawGrid);
+    } else if (115 == keycode) { // F4: Right
       fourpx[1]++;
-      paint0Image(g_img, g_drawGrid);   
+      paint0Image(g_img, g_drawGrid);
     } else if (38 == keycode) { // Keys.Up
       fourpy[0]--;
       paint0Image(g_img, g_drawGrid);
