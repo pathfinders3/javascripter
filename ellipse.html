@@ -1,0 +1,68 @@
+<!-- 
+전역변수 
+gInterval1
+ -->
+ 
+<script>
+var gInterval1;
+</script>
+ 
+<link rel="icon" type="image/x-icon" href="/img/wind-turbine-128.ico">
+
+<title>
+9 Points
+</title>
+
+<style>
+body {
+	background-color:#667766;
+}
+
+canvas {
+	background-color:#556655;
+}
+</style>
+
+<div>
+
+<label>장축 <input type=text id='aa' size=5 value="3"> </label>
+<label>단축<input type=text id='bb' size=5 value="2"></label>
+<label>Z축 <input type=text id='cc' size=5 value="3"></label>
+<label>Degree<input type=text id='ang' size=5 value="45"></label>
+<label title="0.0~6.2">Parametric(t1)<input type=text id='t1' size=5 value="0.0"></label>
+<label title="0.0~6.2">Parametric(t2)<input type=text id='t2' size=5 value="5.8" alt="0.0~6.2"></label>
+
+
+
+<!-- Poly 좌표를 사상시키는 웹 페이지 -->
+
+<button onclick="zoomOut()">
+    Zoom Out
+</button>
+<button onclick="zoomIn()">
+    Zoom In
+</button>
+<button onclick="getTypedValue(); turnRight2(); vector2FromElem(gArrAll);">
+    →→
+</button>
+<button onclick="gInterval1 = setInterval(turnRight2, 100)">
+    →→AUTO
+</button>
+
+<button onclick="getTypedValue(); turnRoll()">
+    ↑↑↑
+</button>
+
+<button onclick="getTypedValue(); assignSurrounds();" alt="press this first">
+    Assign to Variable.👍
+</button>
+<menuItem>Position : </menuItem> <menuItem id="position"></menuItem>
+
+</div>
+
+<canvas id='canvas' width='800' height='600' />
+
+
+
+<script type="text/javascript" src="ellipse.js">
+</script>
