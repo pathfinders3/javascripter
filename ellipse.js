@@ -9,21 +9,20 @@ g_screen_height = document.getElementById("canvas").height;
 let	g_aa = Number(document.getElementById('aa').value);
 let g_bb = Number(document.getElementById('bb').value);
 let g_cc = Number(document.getElementById('cc').value);
-let g_angYawOnly = Number(document.getElementById('ang').value);
+//let g_angYawOnly = Number(document.getElementById('ang').value);
 
 let g_t1 = Number(document.getElementById('t1').value);
 let g_t2 = Number(document.getElementById('t2').value);
 
 // 기본 배열
-//let gArrAll = [[2.1213, 2.1213], [1.7981, 2.36], [1.4031, 2.5046], [0.9523, 2.5493], [0.4634, 2.4924], [-0.0439, 2.3362], [-0.5494, 2.0868], [-1.0331, 1.7542], [-1.4756, 1.3517], [-1.8592, 0.8953], [-2.1687, 0.4032], [-2.3918, -0.105], [-2.5195, -0.609], [-2.5468, -1.0887], [-2.4725, -1.525], [-2.2997, -1.9005], [-2.0351, -2.2003], [-1.6895, -2.4123], [-1.2765, -2.5281], [-0.8126, -2.5432], [-0.3163, -2.4569], [0.1926, -2.2726], [0.6938, -1.9977], [1.1674, -1.6432], [1.5944, -1.2232], [1.9579, -0.7544], [2.2433, -0.2555], [2.4392, 0.2535], [2.538, 0.7525], [2.5355, 1.2214], [2.432, 1.6417],];
 let gArrAll = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
-let gArrBk = [[2.1213, 15.1212, 0], [15.981, 15.1212, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 
 // Turn by gAngle...
 let gArrAll2 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 
 // 누적 각 기록자
-let gAngle = 0;
+let gAngleXZ = 0;
+let gAngleXY = 0;
 
 
 context1.clearRect(0, 0, canvas1.width, canvas1.height);
@@ -60,18 +59,29 @@ function insertArrayVal(xyz, arrTar, arrSrc) {
 }
 
 /**
- * [ [x1,y1,z1], ...]
- * @param {*} xyz 
- * @param {*} arrSrc 
- * @param {*} i 
- * @returns 
+ * pick one pixel [ [x1,y1,z1], ...]
+ * @param {*} xyz wanted x/y/z
+ * @param {*} arrSrc [ [x1,y1,z1], ...]
+ * @param {*} i index
+ * @returns [x1,y1,z1]
  */
 function pickArrayVal(xyz, arrSrc,i) {
   return arrSrc[i][xyz];
 }
 
+var gtest1 = 0;
+
+/**
+ * save one pixel's x/y or z. (so 3 calls required for 1 pixel)
+ * @param {*} xyz indicator (x/y/z)
+ * @param {*} arrTar 
+ * @param {*} xyz1v the value (x/y/z)
+ * @param {*} i 
+ * @returns the pixel info.(data)
+ */
 function saveArrayVal(xyz, arrTar, xyz1v,i) {
   //arrTar[i][xyz] = [x1, y1];
+  // console.log(i, ' of arrTar');  // 0.2?
   arrTar[i][xyz] = xyz1v;
   
   return arrTar[i][xyz];
@@ -109,7 +119,7 @@ function getMousePosition(event) {
     crossCoord.y = y;
 }
 
-// 화살표 키로 마우스 커서 이동
+// Key Event: 화살표 키로 마우스 커서 이동
 document.addEventListener("keydown", function (e) {
 
   switch (e.key) {
@@ -124,11 +134,12 @@ document.addEventListener("keydown", function (e) {
 
 
 
-// Cartesian to screen
-/*
-convCoord(0,0)
-{screenX: 250, screenY: 200}
-*/
+
+/**
+ * Cartesian to screen
+ * convCoord(0,0)
+  {screenX: 250, screenY: 200}
+ */
 function convCoord(cartx, carty, zoom) {
 
   let scrX = cartx*zoom + g_screen_width/2;
@@ -145,7 +156,7 @@ function drawCrossCoord(ctx) {
   console.log(crossCoord.x, crossCoord.y);
 }
 
-// 5 Grid Points. (별 포인트 그리기)
+// 5 Grid Points. (5성 지점 포인트 그리기)
 function drawGrid(ctx) {
 	let arrg = [[0,0], [5,5], [-5,-5], [5,-5], [-5,5]];
 	ctx.fillStyle = "#505050";
@@ -161,29 +172,41 @@ function drawGrid(ctx) {
 
 /**
  * 주어진 배열에 따른 Polygon 그리기
+ * arrT: [ [x1,y1,z1], ...]
  */
 function drawPoly2(ctx, arrT) {
+  //console.log(arrT[0][0], " of error 177");
+  console.log("@@[drawPoly2]");
 	let ret0 = convCoord(arrT[0][0], arrT[0][1], zoomfactor);
-  
+  let ret3 = null;
+  let retLast = null;
+
   ctx.beginPath();
   ctx.moveTo(ret0.scrX, ret0.scrY);
   
   for (let i=1; i<arrT.length; i++) {
   	let ret = convCoord(arrT[i][0], arrT[i][1], zoomfactor);
 		ctx.lineTo(ret.scrX, ret.scrY);
+
+    if (i == arrT.length - 2) ret3 = ret;
+    if (i == arrT.length - 1) retLast = ret;
   }
 
   ctx.closePath();  
   ctx.stroke();  
 
-  ctx.strokeStyle = "#6a3a55";
+  ctx.strokeStyle = "#6a3a55"; // Start 빨간 사각.
   ctx.lineWidth = 3;
   ctx.strokeRect(ret0.scrX-5, ret0.scrY-5, 10, 10);
+
+  ctx.strokeStyle = "#337655"; // 녹색 사각.
+  ctx.strokeRect(ret3.scrX - 5, ret3.scrY - 5, 10, 10);  
+
+  ctx.strokeStyle = "#339955"; // End 사각.
+  ctx.strokeRect(retLast.scrX - 5, retLast.scrY - 5, 10, 10);  
   
-  //ctx.beginPath();
   ctx.lineTo(ret0.scrX, ret0.scrY);
   ctx.stroke();  
-  //ctx.closePath();  
 
 }
 
@@ -197,6 +220,8 @@ function zoomIn() {
 }
 
 function drawAll() {
+  console.log("@@[drawAll]");
+
   context1.clearRect(0, 0, canvas1.width, canvas1.height);
   context1.strokeStyle = "#bada55";
   context1.fillStyle = "#bada55";  
@@ -222,58 +247,47 @@ function drawText() {
   context1.strokeText('the text', 11,61);
 }
 
-/*
-function updateAngleTextBox(nn) {
-  //g_ang = document.getElementById('ang').value;
-  document.getElementById('ang').value = nn;
-  g_ang += nn;  // e.g. nn=10
-}*/
+/**
+ * 
+ * @returns textbox value of XY Angle.
+ */
+function updateXYangle() {
+  let angxy = Number(document.getElementById('angXY').value);
+  console.log(angxy, "angxy updated");
+  
+  return angxy;
+}
 
-function updateAngleTextBox2(nn) {
-  gAngle += nn;
-  document.getElementById('ang').value = gAngle;
+function updateXZAngleTextBox(nn) {
+  gAngleXZ += nn;
+  document.getElementById('angXZ').value = gAngleXZ;
 }
 
 var gLog = [];
 let gCnt = 0;
-//var gInterval1;
 
 /**
  * with a new XZ2Real Function
  * 이거로 할 거임 a,b 안씀.
  */
 function turnRight2() {
-  duplicateArray(); // just call it.
-
-  gArrBk = [];	//초기화	
-
   let cnt = 0;
 
-  //g_ang += 25;  // 텍스트 박스도 나중에 업데이트 해야...
-  updateAngleTextBox2(10);
+  updateXZAngleTextBox(10);
 
   //잠시 console.log(cnt, "is count. and ", gArrAll.length);
 
   for (let i=0; i<gArrAll.length; i++) {
     let x1 = gArrAll[i][0];
     let z1 = gArrAll[i][2];
-    let ss = getXZtReal(x1, z1, gAngle);  // 이것으로 BAT 회전.
+    let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
 
     saveArrayVal(0, gArrAll2, ss[0], i);
     saveArrayVal(2, gArrAll2, ss[1], i);
-    //gArrBk.push(ss); // RETURNING [X,Z]
     
-    //gArrAll2.push(ss);
-    //insertArrayVal(0, gArrAll2, gArrAll);
-
     cnt++;
   }
   gLog.push(gArrAll2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
-
-
-  // 골라넣기. arg1 = 0, x값만 지향. x값만 넣는 것.
-  //insertArrayVal(0, gArrAll, gArrBk); // copy x(arg1=0) only
-  // insert 안 해도 된다. saveArrayVal이 함.
 
   drawAll();
 
@@ -292,50 +306,10 @@ function turnRight2() {
 }
 
 
-/**
- * 25도 스윙 테스트
- */
-/*
-function turnRight() {
-  duplicateArray(); // just call it.
 
-	gArrBk = [];	//초기화	
-	
-	let cnt=0;
-	
-  //g_ang += 25;  // 텍스트 박스도 나중에 업데이트 해야...
-  updateAngleTextBox(10);
-
-  //잠시 console.log(cnt, "is count. and ", gArrAll.length);
-
-	for (let t=g_t1; t<g_t2; t+=0.2) {
-		//let ss = getXZt(g_aa,g_cc,t,g_ang);  // 이것은 회전시키는 함수 아님
-    let ss = getXtYt(x1, y1, g_ang);  // 이것은 회전시키는 함수 아님
-		gArrBk.push(ss); // RETURNING [X,Z]
-		cnt++;
-	}
-  gLog.push(gArrBk[0][0]); // 오로지 X값만.  
-
-	//잠시 console.log(cnt,"is count. and ",gArrBk[0]);//
-
-  // arg1 = 0, x값만 지향. x값만 넣는 것.
-  insertArrayVal(0, gArrAll, gArrBk); // copy x(arg1=0) only
-  drawAll();
-
-  gCnt++;  
-  if (gCnt > 37) {
-    clearInterval(gInterval1);
-
-    for (let i=1; i<gLog.length; i++) {
-      if (gLog[i] == gLog[0]) {
-        console.log("[회전 동일값] ",i,gLog[i]);
-      };
-    }
-  }
-}
-*/
 
 /**
+ * 블렌더용
  * getting console.log value to use in Blender.
  */
 function vector2FromElem(el) {
@@ -365,21 +339,30 @@ function vector2FromElem(el) {
 
 
 /////////////////////////////////
-// 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
-function assignSurrounds() {
-	gArrAll = [];	//초기화
+
+/**
+ * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
+// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
+ */
+function assignSurroundsInXY() {
+	//gArrAll = [];	//초기화
 	
 	let cnt=0;
-  
-  // t 0~4 : half ellipse...
-	//for (let t=0; t<6.2; t+=0.2) {
-  for (let t=g_t1; t<g_t2; t+=0.2) {
-		let ss = getXtYt(g_aa,g_bb,t,g_ang);
-    gArrAll.push([ss[0], ss[1], 0]);
-    cnt++;
-  }
 
-  duplicateArray();
+  gAngleXY = updateXYangle(); // getElement
+
+  // t 0~4 : half ellipse...
+  for (let t=g_t1; t<g_t2; t+=0.2) {  // t: 0~6.2
+		let ss = getXtYt(g_aa,g_bb,t,gAngleXY);
+
+    // to gArrAll2.
+    saveArrayVal(0, gArrAll2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrAll2, ss[1], cnt);
+    cnt++;
+  } // endfor
+
+  console.log(gArrAll2);
+
   console.log(cnt,"is count.");
 }
 
@@ -409,13 +392,6 @@ function getXtYt(a, b, t, psi) {
  * @param {*} psi 회전 각
  * @returns 
  */
-// function getXZtReal(a, b, t, psi) {
-//   let x3 = a * Math.cos(t) * cos(psi) - b * Math.sin(t) * sin(psi);
-//   let z3 = b * cos(psi) * Math.sin(t) + a * Math.cos(t) * sin(psi);
-
-//   return [Number(x3.toFixed(4)), Number(z3.toFixed(4))];
-// }
-
 function getXZtReal(x1, z1, psi) {
   let x3 = x1 * cos(psi);
   let z3 = z1 * sin(psi);
@@ -429,7 +405,7 @@ function getTypedValue() {
 	g_aa = Number(document.getElementById('aa').value);
   g_bb = Number(document.getElementById('bb').value);
   g_cc = Number(document.getElementById('cc').value);
-  g_ang = Number(document.getElementById('ang').value);
+  //g_ang = Number(document.getElementById('ang').value);
   
   g_t1 = Number(document.getElementById('t1').value);  
   g_t2 = Number(document.getElementById('t2').value);
@@ -459,9 +435,9 @@ function cos(deg) {
 
 
 
+duplicateArray(); // just call it.
 
 drawAll();
 
-console.log("THISLEN",gArrAll.length, gArrBk.length);
 
 
