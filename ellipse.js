@@ -14,13 +14,13 @@ let g_cc = Number(document.getElementById('cc').value);
 let g_t1 = Number(document.getElementById('t1').value);
 let g_t2 = Number(document.getElementById('t2').value);
 
-// 湲곕낯 諛곗뿴
+// 기본 배열
 let gArrAll = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 
 // Turn by gAngle...
 let gArrAll2 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 
-// ?꾩쟻 媛?湲곕줉??
+// 누적 각 기록자
 let gAngleXZ = 0;
 let gAngleXY = 0;
 
@@ -29,7 +29,7 @@ context1.clearRect(0, 0, canvas1.width, canvas1.height);
 
 canvas1.addEventListener("mousemove", getMousePosition, false);
 
-// 留덉슦??湲곕줉????옄??醫뚰몴
+// 마우스 기록용 십자선 좌표
 let crossCoord = { x: 0, y: 0 };
 
 
@@ -50,9 +50,9 @@ const compareArray = function(a, b) {
  */
 function insertArrayVal(xyz, arrTar, arrSrc) {
   //console.log('x_or_y: ', xor_y);
-  //console.log('tar湲몄씠=src湲몄씠 ', arrTar.length, arrSrc.length);
+  //console.log('tar길이=src길이 ', arrTar.length, arrSrc.length);
   for (let i = 0; i < arrSrc.length; i++) {
-    // ?좎떆硫덉땄 [gLog蹂닿린?꾪빐] console.log('Target : Src = ', arrTar[i][xor_y], arrSrc[i][xor_y]);
+    // 잠시멈춤 [gLog보기위해] console.log('Target : Src = ', arrTar[i][xor_y], arrSrc[i][xor_y]);
     arrTar[i][xyz] = arrSrc[i][xyz];
   }
   //g_arrTotal[i][xor_y]
@@ -94,7 +94,7 @@ function duplicateArray(/*arrTotal*/) {
   gArrAll2 = JSON.parse(JSON.stringify(gArrAll));
 }
 
-// 留덉슦???ъ??섏슜
+// 마우스 포지션용
 function getMousePosition(event) {
     let x = new Number();
     let y = new Number();
@@ -119,7 +119,7 @@ function getMousePosition(event) {
     crossCoord.y = y;
 }
 
-// Key Event: ?붿궡???ㅻ줈 留덉슦??而ㅼ꽌 ?대룞
+// Key Event: 화살표 키로 마우스 커서 이동
 document.addEventListener("keydown", function (e) {
 
   switch (e.key) {
@@ -148,7 +148,7 @@ function convCoord(cartx, carty, zoom) {
   return {scrX, scrY};
 }
 
-// 留덉슦????옄??洹몃━湲?
+// 마우스 십자선 그리기
 function drawCrossCoord(ctx) {
   ctx.rect(crossCoord.x-3, crossCoord.y-3, 3,3);
   ctx.stroke();
@@ -156,7 +156,7 @@ function drawCrossCoord(ctx) {
   console.log("Mouse Position: ", crossCoord.x, crossCoord.y);
 }
 
-// 5 Grid Points. (5??吏???ъ씤??洹몃━湲?
+// 5 Grid Points. (5성 지점 포인트 그리기)
 function drawGrid(ctx) {
 	let arrg = [[0,0], [5,5], [-5,-5], [5,-5], [-5,5]];
 	ctx.fillStyle = "#505050";
@@ -171,7 +171,7 @@ function drawGrid(ctx) {
 }
 
 /**
- * 二쇱뼱吏?諛곗뿴(?媛?gArrAll2)???곕Ⅸ Polygon 洹몃━湲?
+ * 주어진 배열(대개 gArrAll2)에 따른 Polygon 그리기
  * arrT: [ [x1,y1,z1], ...] e.g. gArrAll2
  */
 function drawPoly2(ctx, arrT) {
@@ -195,14 +195,14 @@ function drawPoly2(ctx, arrT) {
   ctx.closePath();  
   ctx.stroke();  
 
-  ctx.strokeStyle = "#6a3a55"; // Start 鍮④컙 ?ш컖.
+  ctx.strokeStyle = "#6a3a55"; // Start 빨간 사각.
   ctx.lineWidth = 3;
   ctx.strokeRect(ret0.scrX-5, ret0.scrY-5, 10, 10);
 
-  ctx.strokeStyle = "#337655"; // ?뱀깋 ?ш컖.
+  ctx.strokeStyle = "#337655"; // 녹색 사각.
   ctx.strokeRect(ret3.scrX - 5, ret3.scrY - 5, 10, 10);  
 
-  ctx.strokeStyle = "#339955"; // End ?ш컖.
+  ctx.strokeStyle = "#339955"; // End 사각.
   ctx.strokeRect(retLast.scrX - 5, retLast.scrY - 5, 10, 10);  
   
   ctx.lineTo(ret0.scrX, ret0.scrY);
@@ -220,7 +220,7 @@ function zoomIn() {
 }
 
 /**
- * drawpoly2, drawgrid, drawtext, drawcrosscoord ?⑥닔?ㅼ쓣 ?ы븿?쒕떎.
+ * drawpoly2, drawgrid, drawtext, drawcrosscoord 함수들을 포함한다.
  */
 function drawAll() {
   console.log("@@[drawAll]");
@@ -230,7 +230,7 @@ function drawAll() {
   context1.fillStyle = "#bada55";  
   context1.lineWidth = 2;
 
-  // gArrAll2 蹂?섎? 媛吏怨?洹몃┛??
+  // gArrAll2 변수를 가지고 그린다.
   drawPoly2(context1, gArrAll2);
 
   drawGrid(context1);
@@ -274,26 +274,26 @@ let gCnt = 0;
 
 /**
  * with a new XZ2Real Function
- * ?닿굅濡???嫄곗엫 a,b ?덉?.
+ * 이거로 할 거임 a,b 안씀.
  */
 function turnRight2() {
   let cnt = 0;
 
   updateXZAngleTextBox(10);
 
-  //?좎떆 console.log(cnt, "is count. and ", gArrAll.length);
+  //잠시 console.log(cnt, "is count. and ", gArrAll.length);
 
   for (let i=0; i<gArrAll.length; i++) {
     let x1 = gArrAll[i][0];
     let z1 = gArrAll[i][2];
-    let ss = getXZtReal(x1, z1, gAngleXZ);  // ?닿쾬?쇰줈 BAT ?뚯쟾.
+    let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
     
     if (i==0) {
-      //console.log(i, x1, "==> ", ss[0], "??醫뚯륫?먯꽌遺???꾨뒗媛",gAngleXZ);
-      //console.log(i, gArrAll[i][1], "==>same " , "??醫뚯륫?먯꽌遺???꾨뒗媛");
+      //console.log(i, x1, "==> ", ss[0], "왜 좌측에서부터 도는가",gAngleXZ);
+      //console.log(i, gArrAll[i][1], "==>same " , "왜 좌측에서부터 도는가");
     }
 
-    // ?뚯뒪 諛곗뿴??怨좎튂吏 ?딅뒗?ㅻ㈃, XY 癒쇱? ?뚮┛ ??XZ濡??쒖꽌瑜??곕씪???쒕떎.
+    // 소스 배열을 고치지 않는다면, XY 먼저 돌린 후 XZ로 순서를 따라야 한다.
     //saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     //saveArrayVal(1, gArrAll, ss[1], cnt);
 
@@ -302,18 +302,18 @@ function turnRight2() {
     
     cnt++;
   }
-  gLog.push(gArrAll2[0][0]); // ?ㅻ줈吏 X媛믩쭔.  (釉뚮씪?곗???蹂??glog)
+  gLog.push(gArrAll2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
 
   drawAll();
 
-  /* ?뚯쟾 ?숈씪 泥댄겕 [t 泥ル쾲吏??먯뿉 ??섏뿬...]
+  /* 회전 동일 체크 [t 첫번째 점에 대하여...]
   gCnt++;
   if (gCnt > 37) {
     clearInterval(gInterval1);
 
     for (let i = 1; i < gLog.length; i++) {
       if (gLog[i] == gLog[0]) {
-        console.log("[?뚯쟾 ?숈씪媛? ", i, gLog[i]);
+        console.log("[회전 동일값] ", i, gLog[i]);
       };
     }
   }
@@ -322,12 +322,12 @@ function turnRight2() {
 
 
 /**
- * // 二쇰??먮뱾??CLIPBOARD - COPY?섏? ?딄퀬 蹂?섏뿉 ?좊떦
- * XY異????뚯쟾???대떦
-// TurnRight2 ? ?좎궗 ??븷. 醫뚰몴?됰㈃? XY?????..
+ * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
+ * XY축 의 회전도 담당
+// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
  */
 function turnCartoon() {
-  //gArrAll = [];	//珥덇린??
+  //gArrAll = [];	//초기화
 
   let cnt = 0;
 
@@ -339,12 +339,12 @@ function turnCartoon() {
     let x1 = gArrAll[cnt][0];
     let y1 = gArrAll[cnt][1];
 
-    // ?띿뒪??諛뺤뒪 ?댁슜 湲곗??쇰줈 洹몃깷 援ы븿(t??踰붿쐞留뚰겮 ?먯쓣 李띿쓬)
+    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
     //let ss = getXYtReal(x1, y1, gAngleXY);
     let ss = getXtYt(g_aa, g_bb, t, gAngleXY);
 
-    // 洹몃윭硫? gArrAll ?먮룄 ?ｌ뼱???섏? ?딄쿋??(XZ ?뚯쟾???뚯뒪?덇퉴)
-    // 諛??⑤씫??saveArray?몄텧? ?붿뒪?뚮젅?댁슜 ?닿퀬...
+    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
+    // 밑 단락의 saveArray호출은 디스플레이용 이고...
     saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     saveArrayVal(1, gArrAll, ss[1], cnt);
 
@@ -363,12 +363,12 @@ function turnCartoon() {
 
 
 /**
- * // 二쇰??먮뱾??CLIPBOARD - COPY?섏? ?딄퀬 蹂?섏뿉 ?좊떦
- * XY異????뚯쟾???대떦
-// TurnRight2 ? ?좎궗 ??븷. 醫뚰몴?됰㈃? XY?????..
+ * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
+ * XY축 의 회전도 담당
+// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
  */
 function assignSurroundsInXY() {
-  //gArrAll = [];	//珥덇린??
+  //gArrAll = [];	//초기화
 
   let cnt = 0;
 
@@ -377,11 +377,11 @@ function assignSurroundsInXY() {
   // t 0~4 : half ellipse...
   for (let t = g_t1; t < g_t2; t += 0.2) {  // t: 0~6.2
 
-    // ?띿뒪??諛뺤뒪 ?댁슜 湲곗??쇰줈 洹몃깷 援ы븿(t??踰붿쐞留뚰겮 ?먯쓣 李띿쓬)
+    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
     let ss = getXtYt(g_aa, g_bb, t, gAngleXY);
 
-    // 洹몃윭硫? gArrAll ?먮룄 ?ｌ뼱???섏? ?딄쿋??(XZ ?뚯쟾???뚯뒪?덇퉴)
-    // 諛??⑤씫??saveArray?몄텧? ?붿뒪?뚮젅?댁슜 ?닿퀬...
+    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
+    // 밑 단락의 saveArray호출은 디스플레이용 이고...
     saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     saveArrayVal(1, gArrAll, ss[1], cnt);
 
@@ -401,7 +401,7 @@ function assignSurroundsInXY() {
 
 
 /**
- * 釉붾젋?붿슜
+ * 블렌더용
  * getting console.log value to use in Blender.
  */
 function vector2FromElem(el) {
@@ -433,12 +433,12 @@ function vector2FromElem(el) {
 /////////////////////////////////
 
 /**
- * // 二쇰??먮뱾??CLIPBOARD - COPY?섏? ?딄퀬 蹂?섏뿉 ?좊떦
- * XY異????뚯쟾???대떦
-// TurnRight2 ? ?좎궗 ??븷. 醫뚰몴?됰㈃? XY?????..
+ * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
+ * XY축 의 회전도 담당
+// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
  */
 function assignSurroundsInXY() {
-	//gArrAll = [];	//珥덇린??
+	//gArrAll = [];	//초기화
 	
 	let cnt=0;
 
@@ -447,11 +447,11 @@ function assignSurroundsInXY() {
   // t 0~4 : half ellipse...
   for (let t=g_t1; t<g_t2; t+=0.2) {  // t: 0~6.2
 
-    // ?띿뒪??諛뺤뒪 ?댁슜 湲곗??쇰줈 洹몃깷 援ы븿(t??踰붿쐞留뚰겮 ?먯쓣 李띿쓬)
+    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
 		let ss = getXtYt(g_aa,g_bb,t,gAngleXY);
 
-    // 洹몃윭硫? gArrAll ?먮룄 ?ｌ뼱???섏? ?딄쿋??(XZ ?뚯쟾???뚯뒪?덇퉴)
-    // 諛??⑤씫??saveArray?몄텧? ?붿뒪?뚮젅?댁슜 ?닿퀬...
+    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
+    // 밑 단락의 saveArray호출은 디스플레이용 이고...
     saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     saveArrayVal(1, gArrAll, ss[1], cnt);
 
@@ -470,28 +470,28 @@ function assignSurroundsInXY() {
 
 // get rotated Parametric X(t) Y(t)
 /**
- * XY醫뚰몴[Cartoon Roll], XZ醫뚰몴 [Bird's Eye], YZ醫뚰몴[Forward Roll]
- * called by assignSurronds()?몟
+ * XY좌표[Cartoon Roll], XZ좌표 [Bird's Eye], YZ좌표[Forward Roll]
+ * called by assignSurronds()👍
  * @param {*} a 
  * @param {*} b 
  * @param {*} t -2pi to 2pi?
- * @param {*} psi 媛곷룄
+ * @param {*} psi 각도
  * @returns 
  */
 function getXtYt(a, b, t, psi) {
 	let x3 = a*Math.cos(t)*cos(psi) - b*Math.sin(t)*sin(psi);
 	let y3 = b*cos(psi)*Math.sin(t) + a*Math.cos(t)*sin(psi);
   
-  return [Number(x3.toFixed(4)),Number(y3.toFixed(4))]; // XY (Z媛?源딆씠] 遺덈?) | XZ (Y媛?so Bat] 遺덈?) | YZ (X媛?so Roll] 遺덈?)
+  return [Number(x3.toFixed(4)),Number(y3.toFixed(4))]; // XY (Z값[깊이] 불변) | XZ (Y값[so Bat] 불변) | YZ (X값[so Roll] 불변)
 }
 
 /**
- * BAT ?뚯쟾 ?⑥닔 ?믠넂
+ * BAT 회전 함수 →→
  * called by turnRight()
- * @param {*} a ?μ텞
- * @param {*} b ?⑥텞
- * @param {*} t ?섎윭泥섏쭊 ?먯꽑 以?援ъ꽦 ?붿냼(媛??? ?쒕컮??0~2?쐦 ?꾨뒗 ?숈븞...)
- * @param {*} psi ?뚯쟾 媛?(-180 ~ +180 degree, not Radian)
+ * @param {*} a 장축
+ * @param {*} b 단축
+ * @param {*} t 둘러처진 점선 중 구성 요소(각 점, 한바퀴 0~2𝜋 도는 동안...)
+ * @param {*} psi 회전 각 (-180 ~ +180 degree, not Radian)
  * @returns 
  */
 function getXZtReal(x1, z1, psi) {
