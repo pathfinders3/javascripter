@@ -24,6 +24,8 @@ let gArrAll2 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.
 let gAngleXZ = 0;
 let gAngleXY = 0;
 
+let gAngleZY = 0;
+
 
 context1.clearRect(0, 0, canvas1.width, canvas1.height);
 
@@ -132,6 +134,12 @@ document.addEventListener("keydown", function (e) {
   drawAll();
 });
 
+// var gItems;
+// window.addEventListener("paste", function (thePasteEvent) {
+//   gItems = thePasteEvent.clipboardData.items;
+
+//   console.log('are you pasting', gItems);
+// }, false);
 
 
 
@@ -230,22 +238,25 @@ function drawAll() {
   context1.fillStyle = "#bada55";  
   context1.lineWidth = 2;
 
+
+  drawText(301, 321);
+  
   // gArrAll2 변수를 가지고 그린다.
   drawPoly2(context1, gArrAll2);
 
   drawGrid(context1);
-  drawText();
+  drawText(11, 61);
   drawCrossCoord(context1);
 
 }
 
-function drawText() {
+function drawText(x1, y1) {
   let fontStyle = "26px serif";
   
   context1.font = fontStyle;
   context1.strokeStyle = "#212121";
   context1.fillStyle = "#ba3131";  
-  context1.strokeText('the text', 11,61);
+  context1.strokeText('the texH■ ◈  ', x1,y1);
 }
 
 /**
@@ -269,12 +280,18 @@ function updateXZAngleTextBox(nn) {
   document.getElementById('angXZ').value = gAngleXZ;
 }
 
+function updateZYAngleTextBox(nn) {
+  gAngleZY += nn;
+  document.getElementById('angZY').value = gAngleZY;
+}
+
 var gLog = [];
 let gCnt = 0;
 
 /**
  * with a new XZ2Real Function
  * 이거로 할 거임 a,b 안씀.
+ * 새 이름: turnRight2 => turnBat()임.
  */
 function turnRight2() {
   let cnt = 0;
@@ -286,19 +303,23 @@ function turnRight2() {
   for (let i=0; i<gArrAll.length; i++) {
     let x1 = gArrAll[i][0];
     let z1 = gArrAll[i][2];
-    let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-    
+    //let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+    let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+	
     if (i==0) {
-      //console.log(i, x1, "==> ", ss[0], "왜 좌측에서부터 도는가",gAngleXZ);
-      //console.log(i, gArrAll[i][1], "==>same " , "왜 좌측에서부터 도는가");
+	  let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+	  
+      console.log(i, x1,z1, " are i/x1/z1 and after batting:(", ss[0],ss[1], ") °", gAngleXZ);
+	  // already let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+	  console.log(i, x1,z1, " are i/x1/z1 and after batting:(", ss2[0],ss2[1], ") °", gAngleXZ);
     }
 
     // 소스 배열을 고치지 않는다면, XY 먼저 돌린 후 XZ로 순서를 따라야 한다.
     //saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     //saveArrayVal(1, gArrAll, ss[1], cnt);
 
-    saveArrayVal(0, gArrAll2, ss[0], i);
-    saveArrayVal(2, gArrAll2, ss[1], i);
+    saveArrayVal(0, gArrAll2, ss2[0], i);
+    saveArrayVal(2, gArrAll2, ss2[1], i);
     
     cnt++;
   }
@@ -361,15 +382,37 @@ function turnCartoon() {
   drawAll();
 }
 
+// rotate without t value.
+function turnSoleCartoon() {
+	
+}
 
+function turnRoll() {
+	
+	updateZYAngleTextBox(10);
+	
+  for (let i=0; i<gArrAll.length; i++) {
+    let z1 = gArrAll[i][2];
+    let y1 = gArrAll[i][1];	
+	//let zy0 = getZYtReal(3.03, 1.7, 30);
+	let zy = getZYtRotate(z1, y1, gAngleZY);
+    
+    saveArrayVal(2, gArrAll2, zy[0], i);
+    saveArrayVal(1, gArrAll2, zy[1], i);
+    
+    //cnt++;
+  }
+  gLog.push(gArrAll2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
+
+  drawAll();	
+}
 /**
  * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
  * XY축 의 회전도 담당
 // TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
  */
+/*
 function assignSurroundsInXY() {
-  //gArrAll = [];	//초기화
-
   let cnt = 0;
 
   gAngleXY = updateXYangle(); // getElement
@@ -397,6 +440,7 @@ function assignSurroundsInXY() {
 
   drawAll();
 }
+*/
 
 
 
@@ -501,17 +545,59 @@ function getXZtReal(x1, z1, psi) {
   return [Number(x3.toFixed(4)), Number(z3.toFixed(4))];
 }
 
-/**
- * Cartoon Rotation. (almost same as getxztreal() )
- */
 /*
-function getXYtReal(x1, y1, psi) {
-  let x3 = x1 * cos(psi);
-  let y3 = y1 * sin(psi);
-
-  return [Number(x3.toFixed(4)), Number(y3.toFixed(4))];
-}
+* getZYtRotate(6, 0, 30);
 */
+function getZYtRotate(z1, y1, psi) {
+  let z2 = z1*cos(psi) - y1*sin(psi);
+  let y2 = z1*sin(psi) + y1*cos(psi);
+  
+  return [Number(z2.toFixed(4)), Number(y2.toFixed(4))];
+}
+
+/*
+*
+//getDegAlpha(3,3); // [3,3] => 45°
+*/
+function getDegAlpha(z1, y1) {
+	let alpha = Math.atan(z1/y1);	// 몇도였다는 정보.
+	console.log(alpha, 'alpha radina');
+
+  let alphaDeg = makeDeg(alpha);
+  
+  console.log(alphaDeg, 'alpha degree');
+  
+  return alphaDeg;
+}
+
+
+
+
+/*
+* getYZtReal(6, 0, 30);
+*/
+function getZYtReal(z1, y1, psi) {
+  let z0 = y1 * sin(0);	// 이게 몇도(알파{a}값)였다는 정보가 있는가? 없다. 0 이 되면서 소멸된다. 이게 문제. psi는 몇도 더, 회전하느냐를 알려주는 매개변수일 뿐.
+  // z1에서 알파° 값을 알 수도 있을 것 같다.
+	let y0 = y1 * cos(0);
+
+  let alphaDeg = getDegAlpha(z0,y0); // e.g.3,3 => 45°
+
+	// a+b 각도를 구하는 절차
+	//Math.asin(1/2)//0.5235987755982989
+	//let alpha = Math.asin(-z1/y1);	// 몇도였다는 정보.
+
+	let psi2 = psi + alphaDeg;
+  
+  // y1*sin(a+b) ==> z2
+  let z2 = y1 * sin(psi2);
+  let y2 = y1 * cos(psi2);
+  
+  return [Number(z2.toFixed(4)), Number(y2.toFixed(4))];
+}
+
+
+
 
 
 function getTypedValue() {
@@ -532,20 +618,99 @@ function textToClipboard(text) {
   document.body.removeChild(dummy);
 }
 
+/*
+* convert radian to degree
+*/
+function makeDeg(radians)
+{
+  var pi = Math.PI;
+  return radians * (180/pi);
+}
 
 function rad(degrees) {
   var pi = Math.PI;
   return degrees * (pi/180);
 }
 
+/**
+ * degree xx°
+ */
 function sin(deg) {
 	return Math.sin(rad(deg));
 }
+/**
+ * degree xx°
+ */
 function cos(deg) {
 	return Math.cos(rad(deg));
 }
 
 
-duplicateArray(); // just call it.
+//duplicateArray(); // just call it.
+//drawAll();
 
-drawAll();
+/**
+ * 클립보드 이미지 가져오기용 이벤트
+ */
+window.addEventListener("paste", function (e) {
+
+  // Handle the event
+  retrieveImageFromClipboardAsBlob(e, function (imageBlob) {
+    // If there's an image, display it in the canvas
+    if (imageBlob) {
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext('2d');
+      // Create an image to render the blob on the canvas
+      var img = new Image();
+      // Once the image loads, render the img on the canvas
+      img.onload = function () {
+        // Update dimensions of the canvas with the dimensions of the image
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+      };
+
+      // Crossbrowser support for URL
+      var URLObj = window.URL || window.webkitURL;
+
+      // Creates a DOMString containing a URL representing the object given in the parameter
+      // namely the original Blob
+      img.src = URLObj.createObjectURL(imageBlob);
+    }
+  });
+}, false);
+
+
+/**
+ * 클립보드 이미지 가져오기용 함수
+ * @param {*} pasteEvent 
+ * @param {*} callback 
+ */
+function retrieveImageFromClipboardAsBlob(pasteEvent, callback) {
+  if (pasteEvent.clipboardData == false) {
+    if (typeof (callback) == "function") {
+      callback(undefined);
+    }
+  };
+
+  var items = pasteEvent.clipboardData.items;
+
+  if (items == undefined) {
+    if (typeof (callback) == "function") {
+      callback(undefined);
+    }
+  };
+
+  for (var i = 0; i < items.length; i++) {
+    // Skip content if not image
+    if (items[i].type.indexOf("image") == -1) continue;
+    // Retrieve image on clipboard as blob
+    var blob = items[i].getAsFile();
+
+    if (typeof (callback) == "function") {
+      callback(blob);
+    }
+  }
+}
