@@ -14,11 +14,30 @@ let g_cc = Number(document.getElementById('cc').value);
 let g_t1 = Number(document.getElementById('t1').value);
 let g_t2 = Number(document.getElementById('t2').value);
 
-// 기본 배열
-let gArrAll = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 
+// String 1: 기본 배열
+let gArrString1 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
 // Turn by gAngle...
-let gArrAll2 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
+let gArrString2 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
+
+// String 2: 기본 배열
+let gArrString3 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
+// Turn by gAngle...
+let gArrString4 = [[2.1213, 2.1213, 0], [1.7981, 2.36, 0], [1.4031, 2.5046, 0], [0.9523, 2.5493, 0], [0.4634, 2.4924, 0], [-0.0439, 2.3362, 0], [-0.5494, 2.0868, 0], [-1.0331, 1.7542, 0], [-1.4756, 1.3517, 0], [-1.8592, 0.8953, 0], [-2.1687, 0.4032, 0], [-2.3918, -0.105, 0], [-2.5195, -0.609, 0], [-2.5468, -1.0887, 0], [-2.4725, -1.525, 0], [-2.2997, -1.9005, 0], [-2.0351, -2.2003, 0], [-1.6895, -2.4123, 0], [-1.2765, -2.5281, 0], [-0.8126, -2.5432, 0], [-0.3163, -2.4569, 0], [0.1926, -2.2726, 0], [0.6938, -1.9977, 0], [1.1674, -1.6432, 0], [1.5944, -1.2232, 0], [1.9579, -0.7544, 0], [2.2433, -0.2555, 0], [2.4392, 0.2535, 0], [2.538, 0.7525, 0], [2.5355, 1.2214, 0], [2.432, 1.6417, 0],];
+
+
+
+/**
+ * Vertices Set of Ellipses 소스
+ * (together: gArm and gTiltArm)
+ * e.g. gArm[0] : The first String.
+ */
+let gArm = [gArrString1, gArrString3 ];
+/**
+ * Tiled Vertices of Ellipses 회전된.
+ * (together: gArm and gTiltArm) 
+ */
+let gTiltArm = [gArrString2, gArrString4];
 
 // 누적 각 기록자
 let gAngleXZ = 0;
@@ -46,7 +65,7 @@ const compareArray = function(a, b) {
 /**
  * insertArrayVal(0, g_arrTotal, g_arrTotal2)
   insertArrayVal(0, g_arrTotal2, g_arrTotal)
- * @param {*} xyz 0 for x, 1 for y, 2 for z
+ * @param {*} xyz 0;x, 1;y, 2;z
  * @param {*} arrSrc new array element
  * @param {*} arrTar 
  */
@@ -58,6 +77,8 @@ function insertArrayVal(xyz, arrTar, arrSrc) {
     arrTar[i][xyz] = arrSrc[i][xyz];
   }
   //g_arrTotal[i][xor_y]
+
+
 }
 
 /**
@@ -90,10 +111,14 @@ function saveArrayVal(xyz, arrTar, xyz1v,i) {
 }
 
 /**
- * arrTotal => gArrAll2
+ * 미사용 중. duplication of Array 
  */
-function duplicateArray(/*arrTotal*/) {
-  gArrAll2 = JSON.parse(JSON.stringify(gArrAll));
+function duplicateArray1to2(/*arrTotal*/) {
+  gArrString2 = JSON.parse(JSON.stringify(gArrString1));
+}
+
+function duplicateArray2to1(/*arrTotal*/) {
+  gArrString1 = JSON.parse(JSON.stringify(gArrString2));
 }
 
 // 마우스 포지션용
@@ -160,8 +185,8 @@ function convCoord(cartx, carty, zoom) {
 function drawCrossCoord(ctx) {
   ctx.rect(crossCoord.x-3, crossCoord.y-3, 3,3);
   ctx.stroke();
-
-  console.log("Mouse Position: ", crossCoord.x, crossCoord.y);
+  // HTML에서와 동일수치 표시: http://prntscr.com/OxL-NtKUHD2x
+  //console.log("Mouse Position: ", crossCoord.x, crossCoord.y);
 }
 
 // 5 Grid Points. (5성 지점 포인트 그리기)
@@ -183,8 +208,7 @@ function drawGrid(ctx) {
  * arrT: [ [x1,y1,z1], ...] e.g. gArrAll2
  */
 function drawPoly2(ctx, arrT) {
-  //console.log(arrT[0][0], " of error 177");
-  console.log("@@[drawPoly2]");
+  // console.log("@@[drawPoly2]");
 	let ret0 = convCoord(arrT[0][0], arrT[0][1], zoomfactor);
   let ret3 = null;
   let retLast = null;
@@ -231,7 +255,7 @@ function zoomIn() {
  * drawpoly2, drawgrid, drawtext, drawcrosscoord 함수들을 포함한다.
  */
 function drawAll() {
-  console.log("@@[drawAll]");
+  //console.log("@@[drawAll]");
 
   context1.clearRect(0, 0, canvas1.width, canvas1.height);
   context1.strokeStyle = "#bada55";
@@ -242,8 +266,13 @@ function drawAll() {
   drawText(301, 321);
   
   // gArrAll2 변수를 가지고 그린다.
-  drawPoly2(context1, gArrAll2);
-
+  drawPoly2(context1, gArrString2);
+  
+/*   
+	for (let i=0; i<some_length; i++) {
+		drawPoly2(context1, gArrContainer[i][1]) // e.g.gArrAll2;
+	}
+ */
   drawGrid(context1);
   drawText(11, 61);
   drawCrossCoord(context1);
@@ -300,9 +329,9 @@ function turnRight2() {
 
   //잠시 console.log(cnt, "is count. and ", gArrAll.length);
 
-  for (let i=0; i<gArrAll.length; i++) {
-    let x1 = gArrAll[i][0];
-    let z1 = gArrAll[i][2];
+  for (let i=0; i<gArrString1.length; i++) {
+    let x1 = gArrString1[i][0];
+    let z1 = gArrString1[i][2];
     //let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
     let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
 	
@@ -318,12 +347,12 @@ function turnRight2() {
     //saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
     //saveArrayVal(1, gArrAll, ss[1], cnt);
 
-    saveArrayVal(0, gArrAll2, ss2[0], i);
-    saveArrayVal(2, gArrAll2, ss2[1], i);
+    saveArrayVal(0, gArrString2, ss2[0], i);
+    saveArrayVal(2, gArrString2, ss2[1], i);
     
     cnt++;
   }
-  gLog.push(gArrAll2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
+  gLog.push(gArrString2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
 
   drawAll();
 
@@ -343,6 +372,49 @@ function turnRight2() {
 
 
 /**
+ * 이거로 할 거임 a,b 안씀.
+ * 새 이름: turnRight2 => turnBat()임.
+ * @param {*} arsrc e.g. gArm.gArrString1 
+ * @param {*} artar e.g. gArm.gArrString2
+ */
+function turnRightPack(arSrc1, arTar2) {
+  let cnt = 0;
+
+  updateXZAngleTextBox(10);
+
+  if (null == arSrc1) {
+    arSrc1 = gArrString2;
+    arTar2 = gArrString2;
+  }  
+
+  for (let i = 0; i < gArrString1.length; i++) {
+    let x1 = arSrc1[i][0];
+    let z1 = arSrc1[i][2];
+    //let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+    let ss2 = getZYtRotate(x1, z1, 10);  // 이것으로 BAT 회전.
+
+    // 다른 방법으로도 회전을 해 보는 것
+    if (i == 0) {
+      let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+
+      console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss[0], ss[1], ") °", gAngleXZ);
+      // already let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+      console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss2[0], ss2[1], ") °", gAngleXZ);
+    }
+
+    saveArrayVal(0, arTar2, ss2[0], i);
+    saveArrayVal(2, arTar2, ss2[1], i);
+
+    cnt++;
+  }
+
+  drawAll();
+
+}
+
+
+
+/**
  * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
  * XY축 의 회전도 담당
 // TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
@@ -357,8 +429,8 @@ function turnCartoon() {
   // t 0~4 : half ellipse...
   //for (let i = 0; i < gArrAll.length; i++) {
   for (let t=g_t1; t<g_t2; t+=0.2) {  // t: 0~6.2    
-    let x1 = gArrAll[cnt][0];
-    let y1 = gArrAll[cnt][1];
+    let x1 = gArrString1[cnt][0];
+    let y1 = gArrString1[cnt][1];
 
     // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
     //let ss = getXYtReal(x1, y1, gAngleXY);
@@ -366,82 +438,119 @@ function turnCartoon() {
 
     // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
     // 밑 단락의 saveArray호출은 디스플레이용 이고...
-    saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll, ss[1], cnt);
+    saveArrayVal(0, gArrString1, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString1, ss[1], cnt);
 
     // to gArrAll2.
-    saveArrayVal(0, gArrAll2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll2, ss[1], cnt);
+    saveArrayVal(0, gArrString2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString2, ss[1], cnt);
     cnt++;
   } // endfor
 
   //console.log(gArrAll2);
 
-  console.log(cnt, "and", gArrAll.length, " i is count.");
+  console.log(cnt, "and", gArrString1.length, " i is count.");
 
   drawAll();
 }
 
 // rotate without t value.
 function turnSoleCartoon() {
-	
-}
+  updateXYAngleTextBox(10); // getElement
 
-function turnRoll() {
-	
-	updateZYAngleTextBox(10);
-	
-  for (let i=0; i<gArrAll.length; i++) {
-    let z1 = gArrAll[i][2];
-    let y1 = gArrAll[i][1];	
-	//let zy0 = getZYtReal(3.03, 1.7, 30);
-	let zy = getZYtRotate(z1, y1, gAngleZY);
-    
-    saveArrayVal(2, gArrAll2, zy[0], i);
-    saveArrayVal(1, gArrAll2, zy[1], i);
-    
+  for (let i = 0; i < gArrAll.length; i++) {
+    let x1 = gArrAll[i][0];
+    let y1 = gArrAll[i][1];
+
+    let zy = getZYtRotate(x1, y1, gAngleXY);
+
+    saveArrayVal(0, gArrString2, zy[0], i);
+    saveArrayVal(1, gArrString2, zy[1], i);
+
     //cnt++;
   }
-  gLog.push(gArrAll2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
 
   drawAll();	
 }
+
 /**
- * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
- * XY축 의 회전도 담당
-// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
+ * turn Roll Gradually
  */
-/*
-function assignSurroundsInXY() {
-  let cnt = 0;
+function turnRoll() {
 
-  gAngleXY = updateXYangle(); // getElement
+  for (let i = 0; i < gArrString1.length; i++) {
+    let z1 = gArrString2[i][2];
+    let y1 = gArrString2[i][1];
 
-  // t 0~4 : half ellipse...
-  for (let t = g_t1; t < g_t2; t += 0.2) {  // t: 0~6.2
+    // if (i == 0) {
+    //   console.log("turn Rolla] ", y1, "==?", gArrAll2[i][1]);
+    // }
 
-    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
-    let ss = getXtYt(g_aa, g_bb, t, gAngleXY);
+    //let zy = getZYtRotate(z1, y1, gAngleZY);
+    let zy = getZYtRotate(z1, y1, 10);
 
-    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
-    // 밑 단락의 saveArray호출은 디스플레이용 이고...
-    saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll, ss[1], cnt);
+    saveArrayVal(2, gArrString2, zy[0], i);
+    saveArrayVal(1, gArrString2, zy[1], i);
+  }
 
-    // to gArrAll2.
-    saveArrayVal(0, gArrAll2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll2, ss[1], cnt);
-    cnt++;
-  } // endfor
-
-  console.log(gArrAll2);
-
-  console.log(cnt, "is count.");
+  //duplicateArray2to1();
 
   drawAll();
 }
-*/
 
+/**
+ * turn Roll Gradually (Pack:getting source and target parameters)
+ */
+function turnRollPack(arSrc1, arTar2) {
+
+	if (null == arSrc1) {
+		arSrc1 = gArrString2;
+    arTar2 = gArrString2;
+	}
+	
+  for (let i = 0; i < arSrc1.length; i++) {
+    let z1 = arSrc1[i][2];
+    let y1 = arSrc1[i][1];
+
+    let zy = getZYtRotate(z1, y1, 10);
+
+    saveArrayVal(2, arTar2, zy[0], i);
+    saveArrayVal(1, arTar2, zy[1], i);
+  }
+
+
+  drawAll();
+}
+
+
+/**
+ * Old turn (Accumulated...)
+ */
+function OldturnRollAccumulate() {
+	
+	updateZYAngleTextBox(10);
+	
+  for (let i=0; i<gArrString1.length; i++) {
+    let z1 = gArrString1[i][2];
+    let y1 = gArrString1[i][1];	
+
+    if (i==0) {
+      console.log("turn Roll] ", y1, "==?",gArrString2[i][1]);
+    }
+
+    let zy = getZYtRotate(z1, y1, gAngleZY);
+    
+    saveArrayVal(2, gArrString2, zy[0], i);
+    saveArrayVal(1, gArrString2, zy[1], i);
+    
+    //cnt++;
+  }
+  gLog.push(gArrString2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
+
+  //duplicateArray2to1();
+
+  drawAll();	
+}
 
 
 /**
@@ -496,16 +605,16 @@ function assignSurroundsInXY() {
 
     // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
     // 밑 단락의 saveArray호출은 디스플레이용 이고...
-    saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll, ss[1], cnt);
+    saveArrayVal(0, gArrString1, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString1, ss[1], cnt);
 
     // to gArrAll2.
-    saveArrayVal(0, gArrAll2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrAll2, ss[1], cnt);
+    saveArrayVal(0, gArrString2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString2, ss[1], cnt);
     cnt++;
   } // endfor
 
-  console.log(gArrAll2);
+  console.log(gArrString2);
 
   console.log(cnt,"is count.");
 
