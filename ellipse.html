@@ -21,6 +21,10 @@ body {
 canvas {
 	background-color:#556655;
 }
+
+.span1 {
+	font-size:20px;
+}
 </style>
 
 <div>
@@ -28,9 +32,13 @@ canvas {
 <label>장축 <input type=text id='aa' size=5 value="3"> </label>
 <label>단축<input type=text id='bb' size=5 value="2"></label>
 <label>Z축 <input type=text id='cc' size=5 value="3"></label>
-<label>Degree<input type=text id='ang' size=5 value="45"></label>
+
+<label>XZ평(Bat) °Record<input type=text id='angXZ' size=5 value="45"></label>
+<label>XY평(Cart) Degree∠<input type=text id='angXY' size=5 value="0"></label>
+<label>ZY평(Rol) °Record<input type=text id='angZY' size=5 value="11"></label>
+
 <label title="0.0~6.2">Parametric(t1)<input type=text id='t1' size=5 value="0.0"></label>
-<label title="0.0~6.2">Parametric(t2)<input type=text id='t2' size=5 value="5.8" alt="0.0~6.2"></label>
+<label title="0.0~6.2">Parametric(t2)<input type=text id='t2' size=5 value="6.2" alt="0.0~6.2"></label>
 
 
 
@@ -42,20 +50,38 @@ canvas {
 <button onclick="zoomIn()">
     Zoom In
 </button>
-<button onclick="getTypedValue(); turnRight2(); vector2FromElem(gArrAll);">
-    →→
+<button onclick="getTypedValue(); turnCartoonPack(); vector2FromElem(gArrString1); //블렌더용">
+    <span class='span1'>↺↺</span>CARTOON
 </button>
-<button onclick="gInterval1 = setInterval(turnRight2, 100)">
+<button onclick="getTypedValue(); turnRightPack(null, null); vector2FromElem(gArrString1);">
+	<span class='span1'>↪↪</span>BAT
+</button>
+
+
+<button onclick="getTypedValue(); turnRollPack(null, null, 10);">
+<!-- turnRollPack (null:Default_1, null:Default_2) -->
+    <span class='span1'>↑↑ROLL</span>
+</button>
+
+<button onclick="turnMultiBat()" title="setInterval(turnRightPack,...) Arg1:null, Arg2:null">
     →→AUTO
 </button>
-
-<button onclick="getTypedValue(); turnRoll()">
-    ↑↑↑
+<button onclick="turnAutoRoll()" title="setInterval(turnRollPack,...) Arg1:null, Arg2:null">
+    ↑↑Multi-Roll(Not Auto, Not OK)
+</button>
+<button onclick="gInterval1 = setInterval(turnCartoonPack, 100, null, null)" title="setInterval(turnCartoonPack,...) Arg1:null, Arg2:null">
+    <span class='span1'>↺↺</span>AUTO_CAR
 </button>
 
-<button onclick="getTypedValue(); assignSurrounds();" alt="press this first">
-    Assign to Variable.👍
+
+<button onclick="getTypedValue(); assignSurroundsInXY();" alt="press this first">
+    Assign Ellipse t values.👍
 </button>
+
+<button onclick="getTypedValue(); assignRectangleSorrounds();" alt="press this first">
+    Assign Rectangle t values.👍
+</button>
+
 <menuItem>Position : </menuItem> <menuItem id="position"></menuItem>
 
 </div>
