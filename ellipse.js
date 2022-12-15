@@ -36,6 +36,7 @@ let gArm = [gArrString1, gArrString3 ];
 /**
  * Tiled Vertices of Ellipses 회전된.
  * (together: gArm and gTiltArm) 
+ * 10도씩 회전(Roll)해보니, ForeArm 표현을 위해서는 9회 회전이 필요하다.
  */
 let gTiltArm = [gArrString2, gArrString4];
 
@@ -110,16 +111,17 @@ function saveArrayVal(xyz, arrTar, xyz1v,i) {
   return arrTar[i][xyz];
 }
 
+
 /**
- * 미사용 중. duplication of Array 
+ * duplicate gArrString2 to...
+ * @param {*} arrTar1 
  */
-function duplicateArray1to2(/*arrTotal*/) {
-  gArrString2 = JSON.parse(JSON.stringify(gArrString1));
+function duplicateArray(arrTar2, arrSrc1) {
+  arrTar2 = JSON.parse(JSON.stringify(arrSrc1));
+
+  return arrTar2;
 }
 
-function duplicateArray2to1(/*arrTotal*/) {
-  gArrString1 = JSON.parse(JSON.stringify(gArrString2));
-}
 
 // 마우스 포지션용
 function getMousePosition(event) {
@@ -183,8 +185,8 @@ function convCoord(cartx, carty, zoom) {
 
 // 마우스 십자선 그리기
 function drawCrossCoord(ctx) {
-  ctx.rect(crossCoord.x-3, crossCoord.y-3, 3,3);
-  ctx.stroke();
+  //ctx.rect(crossCoord.x-3, crossCoord.y-3, 3,3);
+  ctx.strokeRect(crossCoord.x - 3, crossCoord.y - 3, 3, 3);
   // HTML에서와 동일수치 표시: http://prntscr.com/OxL-NtKUHD2x
   //console.log("Mouse Position: ", crossCoord.x, crossCoord.y);
 }
@@ -192,15 +194,16 @@ function drawCrossCoord(ctx) {
 // 5 Grid Points. (5성 지점 포인트 그리기)
 function drawGrid(ctx) {
 	let arrg = [[0,0], [5,5], [-5,-5], [5,-5], [-5,5]];
-	ctx.fillStyle = "#505050";
+	ctx.fillStyle = "#705050";
   ctx.strokeStyle = "#601010";
   
   for (let i=0; i<arrg.length; i++) {
   	let ret0 = convCoord(arrg[i][0],arrg[i][1], zoomfactor);  
-	  ctx.rect(ret0.scrX, ret0.scrY, zoomfactor, zoomfactor);
+	  //ctx.rect(ret0.scrX, ret0.scrY, zoomfactor, zoomfactor);
+    ctx.fillRect(ret0.scrX, ret0.scrY, zoomfactor, zoomfactor);
+    ctx.strokeRect(ret0.scrX, ret0.scrY, zoomfactor, zoomfactor);
   }
  	//ctx.stroke();
-  ctx.fill();
 }
 
 /**
@@ -208,14 +211,21 @@ function drawGrid(ctx) {
  * arrT: [ [x1,y1,z1], ...] e.g. gArrAll2
  */
 function drawPoly2(ctx, arrT) {
-  // console.log("@@[drawPoly2]");
+  console.log("@@[drawPoly2]");
 	let ret0 = convCoord(arrT[0][0], arrT[0][1], zoomfactor);
   let ret3 = null;
   let retLast = null;
 
+
+  //ctx.fillStyle = "#336600";
   ctx.beginPath();
+  ctx.strokeStyle = "#996600";
+  //ctx.fillStyle = "#336600";
+  ctx.lineWidth = 4;
+
   ctx.moveTo(ret0.scrX, ret0.scrY);
   
+  // asdf
   for (let i=1; i<arrT.length; i++) {
   	let ret = convCoord(arrT[i][0], arrT[i][1], zoomfactor);
 		ctx.lineTo(ret.scrX, ret.scrY);
@@ -223,22 +233,27 @@ function drawPoly2(ctx, arrT) {
     if (i == arrT.length - 2) ret3 = ret;
     if (i == arrT.length - 1) retLast = ret;
   }
-
+  
+  ctx.stroke();
+  //ctx.fill(); // 색은 경로닫기 전에 호출해 칠해야 함.
   ctx.closePath();  
-  ctx.stroke();  
 
-  ctx.strokeStyle = "#6a3a55"; // Start 빨간 사각.
-  ctx.lineWidth = 3;
+  //ctx.stroke();  
+
+  
+///*
+  ctx.strokeStyle = "#aa0101"; // Start 빨간 사각.
+  ctx.lineWidth = 1;
   ctx.strokeRect(ret0.scrX-5, ret0.scrY-5, 10, 10);
 
-  ctx.strokeStyle = "#337655"; // 녹색 사각.
+  ctx.strokeStyle = "#337744"; // 녹색 사각.
   ctx.strokeRect(ret3.scrX - 5, ret3.scrY - 5, 10, 10);  
 
-  ctx.strokeStyle = "#339955"; // End 사각.
+  ctx.strokeStyle = "#339944"; // End녹 사각.
   ctx.strokeRect(retLast.scrX - 5, retLast.scrY - 5, 10, 10);  
   
   ctx.lineTo(ret0.scrX, ret0.scrY);
-  ctx.stroke();  
+  //*/
 
 }
 
@@ -259,23 +274,31 @@ function drawAll() {
 
   context1.clearRect(0, 0, canvas1.width, canvas1.height);
   context1.strokeStyle = "#bada55";
-  context1.fillStyle = "#bada55";  
+  context1.fillStyle = "#993395";  
   context1.lineWidth = 2;
 
 
   drawText(301, 321);
   
   // gArrAll2 변수를 가지고 그린다.
-  drawPoly2(context1, gArrString2);
+  //drawPoly2(context1, gArrString2);
   
-/*   
-	for (let i=0; i<some_length; i++) {
-		drawPoly2(context1, gArrContainer[i][1]) // e.g.gArrAll2;
+  let cols = ["#774400", "#114433", "#776611", "#663300", "#663300", "#663300" ];
+///*   gTiltArm is a set of gArrString2. (gTar)
+	for (let i=0; i<gTiltArm.length; i++) {
+		//drawPoly2(context1, gArrContainer[i][1]) // e.g.gArrAll2;
+
+    context1.fillStyle = cols[i];    // 매번 내부색 다르게.
+    // 뒷쪽 인덱스부터 그린다. (주로 앞쪽을 수정하므로 앞쪽이 보이게..)
+		drawPoly2(context1, gTiltArm[gTiltArm.length -1 - i]); // e.g.gArrAll2;
+    //drawPoly2(context1, gTiltArm[0]); // e.g.gArrAll2;
 	}
- */
+//*/
+
   drawGrid(context1);
   drawText(11, 61);
-  drawCrossCoord(context1);
+  //drawCrossCoord(context1);
+
 
 }
 
@@ -283,8 +306,8 @@ function drawText(x1, y1) {
   let fontStyle = "26px serif";
   
   context1.font = fontStyle;
-  context1.strokeStyle = "#212121";
-  context1.fillStyle = "#ba3131";  
+  context1.strokeStyle = "#212181";
+  //context1.fillStyle = "#fa3131";  
   context1.strokeText('the texH■ ◈  ', x1,y1);
 }
 
@@ -317,62 +340,10 @@ function updateZYAngleTextBox(nn) {
 var gLog = [];
 let gCnt = 0;
 
-/**
- * with a new XZ2Real Function
- * 이거로 할 거임 a,b 안씀.
- * 새 이름: turnRight2 => turnBat()임.
- */
-function turnRight2() {
-  let cnt = 0;
-
-  updateXZAngleTextBox(10);
-
-  //잠시 console.log(cnt, "is count. and ", gArrAll.length);
-
-  for (let i=0; i<gArrString1.length; i++) {
-    let x1 = gArrString1[i][0];
-    let z1 = gArrString1[i][2];
-    //let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-    let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-	
-    if (i==0) {
-	  let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-	  
-      console.log(i, x1,z1, " are i/x1/z1 and after batting:(", ss[0],ss[1], ") °", gAngleXZ);
-	  // already let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-	  console.log(i, x1,z1, " are i/x1/z1 and after batting:(", ss2[0],ss2[1], ") °", gAngleXZ);
-    }
-
-    // 소스 배열을 고치지 않는다면, XY 먼저 돌린 후 XZ로 순서를 따라야 한다.
-    //saveArrayVal(0, gArrAll, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    //saveArrayVal(1, gArrAll, ss[1], cnt);
-
-    saveArrayVal(0, gArrString2, ss2[0], i);
-    saveArrayVal(2, gArrString2, ss2[1], i);
-    
-    cnt++;
-  }
-  gLog.push(gArrString2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
-
-  drawAll();
-
-  /* 회전 동일 체크 [t 첫번째 점에 대하여...]
-  gCnt++;
-  if (gCnt > 37) {
-    clearInterval(gInterval1);
-
-    for (let i = 1; i < gLog.length; i++) {
-      if (gLog[i] == gLog[0]) {
-        console.log("[회전 동일값] ", i, gLog[i]);
-      };
-    }
-  }
-  */
-}
-
 
 /**
  * 이거로 할 거임 a,b 안씀.
+ * with a new XZ2Real Function (사실은 getZYtRotate:공통회전 함수가 쓰임)
  * 새 이름: turnRight2 => turnBat()임.
  * @param {*} arsrc e.g. gArm.gArrString1 
  * @param {*} artar e.g. gArm.gArrString2
@@ -380,30 +351,26 @@ function turnRight2() {
 function turnRightPack(arSrc1, arTar2) {
   let cnt = 0;
 
-  updateXZAngleTextBox(10);
-
   if (null == arSrc1) {
     arSrc1 = gArrString2;
     arTar2 = gArrString2;
   }  
 
-  for (let i = 0; i < gArrString1.length; i++) {
+  for (let i = 0; i < arSrc1.length; i++) {
     let x1 = arSrc1[i][0];
     let z1 = arSrc1[i][2];
-    //let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
     let ss2 = getZYtRotate(x1, z1, 10);  // 이것으로 BAT 회전.
 
     // 다른 방법으로도 회전을 해 보는 것
+    /*
     if (i == 0) {
-      let ss = getXZtReal(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
+      let ss = getXZtReal(x1, z1, 10);  // 이것으로 BAT 회전.
+      // console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss[0], ss[1], ") °", gAngleXZ);
+      // console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss2[0], ss2[1], ") °", gAngleXZ);
+    }*/
 
-      console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss[0], ss[1], ") °", gAngleXZ);
-      // already let ss2 = getZYtRotate(x1, z1, gAngleXZ);  // 이것으로 BAT 회전.
-      console.log(i, x1, z1, " are i/x1/z1 and after batting:(", ss2[0], ss2[1], ") °", gAngleXZ);
-    }
-
-    saveArrayVal(0, arTar2, ss2[0], i);
-    saveArrayVal(2, arTar2, ss2[1], i);
+    saveArrayVal(0, arTar2, ss2[0], i); // XZ 0-2
+    saveArrayVal(2, arTar2, ss2[1], i); // XZ
 
     cnt++;
   }
@@ -414,60 +381,23 @@ function turnRightPack(arSrc1, arTar2) {
 
 
 
-/**
- * // 주변점들을 CLIPBOARD - COPY하지 않고 변수에 할당
- * XY축 의 회전도 담당
-// TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
- */
-function turnCartoon() {
-  //gArrAll = [];	//초기화
 
-  let cnt = 0;
-
-  updateXYAngleTextBox(10); // getElement
-
-  // t 0~4 : half ellipse...
-  //for (let i = 0; i < gArrAll.length; i++) {
-  for (let t=g_t1; t<g_t2; t+=0.2) {  // t: 0~6.2    
-    let x1 = gArrString1[cnt][0];
-    let y1 = gArrString1[cnt][1];
-
-    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
-    //let ss = getXYtReal(x1, y1, gAngleXY);
-    let ss = getXtYt(g_aa, g_bb, t, gAngleXY);
-
-    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
-    // 밑 단락의 saveArray호출은 디스플레이용 이고...
-    saveArrayVal(0, gArrString1, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrString1, ss[1], cnt);
-
-    // to gArrAll2.
-    saveArrayVal(0, gArrString2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
-    saveArrayVal(1, gArrString2, ss[1], cnt);
-    cnt++;
-  } // endfor
-
-  //console.log(gArrAll2);
-
-  console.log(cnt, "and", gArrString1.length, " i is count.");
-
-  drawAll();
-}
 
 // rotate without t value.
-function turnSoleCartoon() {
-  updateXYAngleTextBox(10); // getElement
+function turnCartoonPack(arSrc1, arTar2) {
+  if (null == arSrc1) {
+    arSrc1 = gArrString2; //2to2
+    arTar2 = gArrString2; //2to2
+  }
 
-  for (let i = 0; i < gArrAll.length; i++) {
-    let x1 = gArrAll[i][0];
-    let y1 = gArrAll[i][1];
+  for (let i = 0; i < arSrc1.length; i++) {
+    let x1 = arSrc1[i][0];
+    let y1 = arSrc1[i][1];
 
-    let zy = getZYtRotate(x1, y1, gAngleXY);
+    let xy = getZYtRotate(x1, y1, 10); // has [0,1]
 
-    saveArrayVal(0, gArrString2, zy[0], i);
-    saveArrayVal(1, gArrString2, zy[1], i);
-
-    //cnt++;
+    saveArrayVal(0, arTar2, xy[0], i);
+    saveArrayVal(1, arTar2, xy[1], i);
   }
 
   drawAll();	
@@ -476,45 +406,49 @@ function turnSoleCartoon() {
 /**
  * turn Roll Gradually
  */
-function turnRoll() {
+// function turnRoll() {
 
-  for (let i = 0; i < gArrString1.length; i++) {
-    let z1 = gArrString2[i][2];
-    let y1 = gArrString2[i][1];
+//   for (let i = 0; i < gArrString1.length; i++) {
+//     let z1 = gArrString2[i][2];
+//     let y1 = gArrString2[i][1];
 
-    // if (i == 0) {
-    //   console.log("turn Rolla] ", y1, "==?", gArrAll2[i][1]);
-    // }
+//     // if (i == 0) {
+//     //   console.log("turn Rolla] ", y1, "==?", gArrAll2[i][1]);
+//     // }
 
-    //let zy = getZYtRotate(z1, y1, gAngleZY);
-    let zy = getZYtRotate(z1, y1, 10);
+//     //let zy = getZYtRotate(z1, y1, gAngleZY);
+//     let zy = getZYtRotate(z1, y1, 10);
 
-    saveArrayVal(2, gArrString2, zy[0], i);
-    saveArrayVal(1, gArrString2, zy[1], i);
-  }
+//     saveArrayVal(2, gArrString2, zy[0], i);
+//     saveArrayVal(1, gArrString2, zy[1], i);
+//   }
 
-  //duplicateArray2to1();
+//   //duplicateArray2to1();
 
-  drawAll();
-}
+//   drawAll();
+// }
 
 /**
- * turn Roll Gradually (Pack:getting source and target parameters)
+ * turn Roll(ZY) Gradually (Pack:getting source and target parameters)
  */
-function turnRollPack(arSrc1, arTar2) {
+function turnRollPack(arSrc1, arTar2, ang1) {
 
 	if (null == arSrc1) {
 		arSrc1 = gArrString2;
     arTar2 = gArrString2;
 	}
+
+  if (null == ang1) {
+    ang1 = 10;  // default angle set if not specified.
+  }
 	
   for (let i = 0; i < arSrc1.length; i++) {
-    let z1 = arSrc1[i][2];
+    let z1 = arSrc1[i][2];  // 2-1;z-y
     let y1 = arSrc1[i][1];
 
-    let zy = getZYtRotate(z1, y1, 10);
+    let zy = getZYtRotate(z1, y1, ang1);  //0-1;z-y.
 
-    saveArrayVal(2, arTar2, zy[0], i);
+    saveArrayVal(2, arTar2, zy[0], i);  //2-1;z-y
     saveArrayVal(1, arTar2, zy[1], i);
   }
 
@@ -522,36 +456,40 @@ function turnRollPack(arSrc1, arTar2) {
   drawAll();
 }
 
-
 /**
- * Old turn (Accumulated...)
+ * <1: 하나도 없으면 이란 뜻.
+ * @param {*} i e.g. expand array, if len<3 (for e.g.)
  */
-function OldturnRollAccumulate() {
-	
-	updateZYAngleTextBox(10);
-	
-  for (let i=0; i<gArrString1.length; i++) {
-    let z1 = gArrString1[i][2];
-    let y1 = gArrString1[i][1];	
+function expandTiltArmArray(i) {
+  let tmp = [1,3,4];
+  tmp = duplicateArray(tmp, gArrString1); // 왜 참조에 의한 WRITE는 안 되는지?
 
-    if (i==0) {
-      console.log("turn Roll] ", y1, "==?",gArrString2[i][1]);
-    }
-
-    let zy = getZYtRotate(z1, y1, gAngleZY);
-    
-    saveArrayVal(2, gArrString2, zy[0], i);
-    saveArrayVal(1, gArrString2, zy[1], i);
-    
-    //cnt++;
+  if (gTiltArm.length < i) 
+    gTiltArm.push(tmp); 
+  else {
+    console.log('No Need to Expand Array. : ', gTiltArm.length);
   }
-  gLog.push(gArrString2[0][0]); // 오로지 X값만.  (브라우저용 변수 glog)
-
-  //duplicateArray2to1();
-
-  drawAll();	
 }
 
+/**
+ * turn Multiple Elems. Roll.
+ */
+function turnAutoRoll() {
+  expandTiltArmArray(2);  // 2개여야 함
+  turnRollPack(gTiltArm[0], gTiltArm[1], 20);
+
+  expandTiltArmArray(3);  // 3개여야 함
+  turnRollPack(gTiltArm[0], gTiltArm[2], 40);  
+
+  expandTiltArmArray(4);  // 4개여야 함
+  turnRollPack(gTiltArm[0], gTiltArm[3], 60);
+
+  // turnRollPack(gArrString2, gArrString2, 10);
+  // duplicateArray(gArrString2, gArrString4);
+  //duplicateArray(gArrString2, gArrString4);
+  console.log("Job FINISHED");
+  /////////////////////////////////////
+}
 
 /**
  * 블렌더용
@@ -591,17 +529,49 @@ function vector2FromElem(el) {
 // TurnRight2 와 유사 역할. 좌표평면은 XY에 대해...
  */
 function assignSurroundsInXY() {
-	//gArrAll = [];	//초기화
-	
+
 	let cnt=0;
 
-  gAngleXY = updateXYangle(); // getElement
+  gAngleXY = 0;//updateXYangle(); // getElement
 
   // t 0~4 : half ellipse...
   for (let t=g_t1; t<g_t2; t+=0.2) {  // t: 0~6.2
 
     // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
-		let ss = getXtYt(g_aa,g_bb,t,gAngleXY);
+		let ss = getXtYtEllipse(g_aa,g_bb,t,gAngleXY);
+	
+    // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
+    // 밑 단락의 saveArray호출은 디스플레이용 이고...
+    saveArrayVal(0, gArrString1, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString1, ss[1], cnt);
+
+    // to gArrAll2.
+    saveArrayVal(0, gArrString2, ss[0], cnt);  // use cnt instead of t(0, 0.2,...)
+    saveArrayVal(1, gArrString2, ss[1], cnt);
+    cnt++;
+  } // endfor
+
+  //console.log(gArrString2);
+  console.log(cnt,"is count.");
+
+  drawAll();
+}
+
+/**
+ * assigning rectangle t 점들.
+ */
+function assignRectangleSorrounds() {
+  //gArrAll = [];	//초기화
+
+  let cnt = 0;
+
+  gAngleXY = updateXYangle(); // getElement
+
+  // t 0~4 : half ellipse...
+  for (let t = g_t1; t < g_t2; t += 0.2) {  // t: 0~6.2
+
+    // 텍스트 박스 내용 기준으로 그냥 구함(t의 범위만큼 점을 찍음)
+    let ss = getXtYtEllipse(g_aa, g_bb, t, gAngleXY);
 
     // 그러면, gArrAll 에도 넣어야 하지 않겠나 (XZ 회전의 소스니까)
     // 밑 단락의 saveArray호출은 디스플레이용 이고...
@@ -614,29 +584,47 @@ function assignSurroundsInXY() {
     cnt++;
   } // endfor
 
-  console.log(gArrString2);
-
-  console.log(cnt,"is count.");
+  //console.log(gArrString2);
+  console.log(cnt, "is count.");
 
   drawAll();
 }
 
-// get rotated Parametric X(t) Y(t)
+
+
 /**
  * XY좌표[Cartoon Roll], XZ좌표 [Bird's Eye], YZ좌표[Forward Roll]
  * called by assignSurronds()👍
+ * get rotated Parametric X(t) Y(t) of 타원의 각 t점들을 만든다
  * @param {*} a 
  * @param {*} b 
  * @param {*} t -2pi to 2pi?
  * @param {*} psi 각도
  * @returns 
  */
-function getXtYt(a, b, t, psi) {
+function getXtYtEllipse(a, b, t, psi) {
 	let x3 = a*Math.cos(t)*cos(psi) - b*Math.sin(t)*sin(psi);
 	let y3 = b*cos(psi)*Math.sin(t) + a*Math.cos(t)*sin(psi);
   
   return [Number(x3.toFixed(4)),Number(y3.toFixed(4))]; // XY (Z값[깊이] 불변) | XZ (Y값[so Bat] 불변) | YZ (X값[so Roll] 불변)
 }
+
+/**
+ * 직선 다각형의 각 t좌표 리턴.
+ * @param {} a 
+ * @param {*} b 
+ * @param {*} t 
+ * @param {*} psi 
+ * @returns 
+ */
+function getXtYtRectangle(a, b, t, psi) {
+  let x3 = a * Math.cos(t) * cos(psi) - b * Math.sin(t) * sin(psi);
+  let y3 = b * cos(psi) * Math.sin(t) + a * Math.cos(t) * sin(psi);
+
+  return [Number(x3.toFixed(4)), Number(y3.toFixed(4))]; // XY (Z값[깊이] 불변) | XZ (Y값[so Bat] 불변) | YZ (X값[so Roll] 불변)
+}
+
+
 
 /**
  * BAT 회전 함수 →→
@@ -656,6 +644,7 @@ function getXZtReal(x1, z1, psi) {
 
 /*
 * getZYtRotate(6, 0, 30);
+* 정통 회전.
 */
 function getZYtRotate(z1, y1, psi) {
   let z2 = z1*cos(psi) - y1*sin(psi);
