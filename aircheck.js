@@ -312,7 +312,8 @@ function getTimeFromText(timeValue) {
 function getSplittedRowsFromInput() {
   areaValue = document.getElementById('code1').value;
   
-  console.log(areaValue, "is Area", areaValue.length);
+  //console.log(areaValue, "is Area", areaValue.length);
+  console.log("316: the len of Area", areaValue.length);
   
   let timeValue = areaValue; // Get the value of the input element
   const timeRegex = /\r\n/g;
@@ -444,35 +445,32 @@ function extractOutermostParentheses(str) {
 function hasWantedWord(str, arr) {
   for (let i = 0; i < arr.length; i++) {
     if (str.includes(arr[i])) {
-      return true; // 찾다보니 있다
+      return true;
     }
   }
-  return false; // 결국엔 없다
+  return false;
 }
+
 
 
 /**
  * 🗲
  */
-function SplitAndGo() {
+function SplitAndGo(bWantedTimeOnly) {
 	gfines = "";	
 	
   g_minutes1 = document.getElementById('minutes2add');
 
-  let lines = getSplittedRowsFromInput();
 
-  //console.log(lines.length, "라인 길이")
+  let lines = getSplittedRowsFromInput();
 
   // wanted lines should be included only.
   for (let i = lines.length-1; i>= 0; i--) {
     if (false == hasWantedWord(lines[i], g_wantedAirlines)) {
       lines.splice(i, 1);
     }
-		
   }
   // now we have wanted lines with wanted keyword.
-
-  console.log(lines.length, "라인 길이good ")
 
   for (let i = 0; i < lines.length; i++) {
     let matches = getTimeFromText(lines[i]);
@@ -481,6 +479,7 @@ function SplitAndGo() {
       if (false == lines[i].includes("화물")) {
         // fine: 계속 업데이트되는 최종 결과물 스트링.
         let fine1 = ReplaceLine(lines[i]);  // 일반 치환 (다음은 괄호집중치환)
+        console.log(" 482: the line of 1st fine1", fine1.length)
         let fine2 = replaceParenthesesWithUnderscores(fine1); // 괄호 다 치환
         let kwd1 = getUnderscoreSemicolonString(fine2); // from a row(fine2)
         kwd2 = kwd1.slice(0, 3);
@@ -497,18 +496,25 @@ function SplitAndGo() {
         if (time2 == null) 
           time2 = findNthMatch(fine4, 1);
 
-        // Arriv할 시간이 남아 있어야만, 그 줄을 더한다
-        if (compareTimes(time1, time2) > 0) {
+        if (bWantedTimeOnly) {
+          // Arriv할 시간이 남아 있어야만, 그 줄을 더한다          
+          if (compareTimes(time1, time2) > 0) {
+            gfines += fine4 + "\r\n";
+           // console.log(gfines.length, "HAHA GFINES!");
+          } else { // 아니면 안 더하는 것.(Do nothing)
+            console.log("🤯 Not the Time Needed!", fine4);
+          }
+        } else {  // 시간을 고르지 않고 ALL-TIME 에 대하여 다 적용.
           gfines += fine4 + "\r\n";
-        } else { // 아니면 안 더하는 것.(Do nothing)
-			//console.log("🤯 Not the Time Needed!", fine4);
-		}
+        }
 
       } else {
-        //console.log(lines[i], "화화 있음");
+        //console.log(lines[i], "화무르 있음");
       }
 
 
+    } else {
+      console.log(" 512: this match nul sir",  i)   
     }
   }
 
